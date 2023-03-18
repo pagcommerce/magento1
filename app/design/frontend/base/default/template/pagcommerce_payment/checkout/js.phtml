@@ -1,0 +1,92 @@
+<script>
+    jQuery(document).on('click', 'input[name="payment[method]"]', function(){
+        checkPagcommerceDocument(this);
+    });
+
+
+    // jQuery(document).on('click', '.pag_check_document_pix', function(){
+    //     if(validatePagDocument(jQuery('#cpfcnpjpix'))){
+    //         payment.save();
+    //     }else{
+    //         return false;
+    //     }
+    // });
+    //
+    // jQuery(document).on('click', '.pag_check_document_boleto', function(){
+    //     if(validatePagDocument(jQuery('#cpfcnpjboleto'))){
+    //         payment.save();
+    //     }else{
+    //         return false;
+    //     }
+    // });
+
+
+
+    function validatePagDocument(inputDocument){
+        var doc = jQuery(inputDocument).val();
+        var url = "<?php echo Mage::getBaseUrl().'pagcommerce/standard/validatecpfcnpj/documento/'?>";
+        $j.ajax({
+            url: url,
+            type: "POST",
+            data: ({documento: doc}),
+            dataType: 'json',
+            success: function(data) {
+                var submitPaymentButton = jQuery('button[onclick="payment.save()"]');
+
+                if(!data.status){
+                    alert('CPF/CNPJ INVÁLIDO!');
+                    jQuery('.pagcommerce_documento').val('');
+                    jQuery(submitPaymentButton).attr('disabled', 'disabled');
+                }else{
+                    if(submitPaymentButton.length){
+                        jQuery(submitPaymentButton).removeAttr('disabled');
+                    }
+                    return true;
+                }
+            }
+        });
+        return false;
+    }
+
+    jQuery(document).on('change', '.pagcommerce_documento', function(){
+
+
+    });
+
+    jQuery(document).on('keyup', '.pagcommerce_documento', function(){
+        var cpfcnpj = $j(this).val();
+        elementId = jQuery(this).attr('id');
+        if (cpfcnpj.length >= 14){
+            VMasker(document.getElementById(elementId)).maskPattern('99.999.999/9999-99');
+        }
+        else{
+            VMasker(document.getElementById(elementId)).maskPattern('999.999.999-99');
+        }
+
+    });
+
+
+
+    function checkPagcommerceDocument(paymentMethodElement){
+        return true;
+        elementMethod = jQuery(paymentMethodElement);
+        if(elementMethod.length){
+            var submitPaymentButton = jQuery('button[onclick="payment.save()"]');
+            if(submitPaymentButton.length){
+                elementId = jQuery(elementMethod).attr('id');
+                elementHasDocument  = jQuery('.pg_has_document');
+                if(elementId == 'p_method_pagcommerce_payment_boleto' || elementId == 'p_method_pagcommerce_payment_pix'){
+                    if(!jQuery(elementHasDocument).length){
+                        jQuery(submitPaymentButton).attr('disabled', 'disabled');
+                    }
+                }else{
+                    jQuery(submitPaymentButton).removeAttr('disabled');
+                }
+            }
+        }
+    }
+
+
+
+
+</script>

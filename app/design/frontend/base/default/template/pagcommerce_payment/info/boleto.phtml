@@ -1,0 +1,11 @@
+<?php
+/** @var Pagcommerce_Payment_Block_Info_Boleto $this */
+$data = $this->getInfo()->getAdditionalInformation();
+if(isset($data['boleto']['boleto_url'])):
+    echo $this->getMethod()->getTitle();
+    ?>
+    <br>
+    <a href="<?php echo $data['boleto']['boleto_url']; ?>" target="_blank">
+        <img width="70" style="margin: 0 auto" src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/boleto.png'); ?>" title="Boleto bancário"/>
+    </a>
+<?php endif; ?>

@@ -1,0 +1,232 @@
+$cctheme__text-primary__color: #383838;
+$cctheme__text-secondary__color: #4A4948;
+$cctheme__background-primary__color: #fff;
+$cctheme__primary__color: #FF7820;
+$cctheme__buy-button__color: #5ECF38;
+$cctheme__border__color: #dadada;
+$cctheme__text-danger__color: #FF0F00;
+
+.cctheme-onepagesuccess {
+    .cctheme-payment-block {
+        background: $cctheme__background-primary__color;
+        border-radius: 8px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
+
+        .text-danger {
+            color: $cctheme__text-danger__color;
+        }
+    }
+
+    .cctheme-payment-block > .cctheme-payment-block-title {
+        & {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .cctheme-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: $cctheme__text-secondary__color;
+            text-transform: lowercase;
+        }
+    }
+
+    .cctheme-payment-block > .content {
+        display: flex;
+        gap: 30px;
+        width: 100%;
+        flex-wrap: wrap;
+
+        @media (min-width: 768px) {
+            flex-wrap: nowrap;
+        }
+    }
+
+    .cctheme-payment-block .cctheme-payment-summary {
+        & {
+            background: #F5F5F5;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: fit-content;
+        }
+
+        .summary-text {
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .img-wrapper {
+            margin-bottom: 16px;
+        }
+
+        .img-wrapper .img {
+            padding: 16px;
+            border-radius: 8px;
+            background: $cctheme__background-primary__color;
+            border: 1px dashed $cctheme__primary__color;
+            box-shadow: 0 4px 10px rgba(0,0,0, .05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    #pix.cctheme-payment-block .cctheme-payment-summary {
+        flex: 0 0 100%;
+
+        @media (min-width: 768px) {
+            flex: 0 0 236px;
+        }
+    }
+    #boleto.cctheme-payment-block .cctheme-payment-summary {
+        flex: 0 0 100%;
+
+        @media (min-width: 768px) {
+            flex: 0 0 452px;
+        }
+    }
+
+    .cctheme-payment-block .input-barcode {
+        & {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        > .input {
+            border: 1px solid $cctheme__border__color;
+            border-radius: 8px;
+            padding: 16px 20px;
+            color: $cctheme__text-secondary__color;
+            background: $cctheme__background-primary__color;
+            outline: none;
+            width: 100%;
+            max-width: -webkit-fill-available;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .cctheme-payment-block .actions-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        width: 100%;
+        flex-wrap: wrap;
+
+        @media (min-width: 768px) {
+            flex-wrap: nowrap;
+        }
+    }
+
+    .cctheme-payment-block .cctheme-payment-content {
+        & {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 10px;
+        }
+        
+        > .title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid lighten($cctheme__border__color, 6%);
+            padding-bottom: 8px;
+            margin-bottom: 22px;
+
+            .cctheme-text {
+                text-transform: lowercase;
+            }
+        }
+
+        .grand-total .price {
+            color: $cctheme__text-secondary__color;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .cctheme-text {
+            color: $cctheme__text-secondary__color;
+        }
+    }
+
+    .cctheme-payment-block .cctheme-payment-steps {
+        .step:not(:last-of-type) {
+            margin-bottom: 6px;
+        }
+    }
+
+    .cctheme-payment-block .cctheme-payment-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: auto;
+        padding-top: 30px;
+
+        .cctheme-image {
+            margin-top: 4px;
+        }
+    }
+
+    .cctheme-small {
+        font-size: 12px;
+    }
+
+    .cctheme-strong {
+        font-weight: 600;
+    }
+
+    .cctheme-image {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .action {
+        border: none;
+        outline: none;
+        border-radius: 8px;
+        padding: 13px 28px;
+        font-size: 14px;
+        font-weight: 400;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all .1s ease 0s;
+        text-transform: lowercase;
+        width: 100%;
+    }
+
+    .action .cctheme-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .action.primary {
+        background: $cctheme__buy-button__color;
+        color: #fff;
+        font-weight: 500;
+
+        &:hover {
+            background: darken($cctheme__buy-button__color, 4%);
+        }
+    }
+
+    .action.secondary {
+        background: rgba($cctheme__text-secondary__color, .05);
+        color: $cctheme__text-secondary__color;
+
+        &:hover {
+            background: darken(rgba($cctheme__text-secondary__color, .05), 4%);
+        }
+    }
+}

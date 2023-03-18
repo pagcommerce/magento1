@@ -1,0 +1,13 @@
+<?php
+    /** @var Pagcommerce_Payment_Block_Info_Boleto $this */
+    /** @var Mage_Sales_Model_Order $order */
+    $order = $this->getInfo()->getOrder();
+    echo "Forma de Pagamento: ".Mage::getStoreConfig('payment/pagcommerce_payment_boleto/title').'<br>';
+    if($order->getState() == $order::STATE_NEW) {
+        $payment = $order->getPayment();
+        $data = $payment->getMethodInstance()->getInfoInstance()->getAdditionalInformation();
+        if (isset($data['boleto']['boleto_url']) && $data['boleto']['boleto_url']) {
+            echo '<a href="' . $data['boleto']['boleto_url'] . '" target="_blank">Imprimir boleto</a>';
+        }
+    }
+    ?>

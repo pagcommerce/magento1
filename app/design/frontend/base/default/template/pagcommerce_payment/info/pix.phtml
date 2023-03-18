@@ -1,0 +1,30 @@
+<?php
+/** @var Pagcommerce_Payment_Block_Info_Boleto $this */
+$data = $this->getInfo()->getAdditionalInformation();
+$order = $this->getInfo()->getOrder();
+echo "Forma de Pagamento: ".Mage::getStoreConfig('payment/pagcommerce_payment_pix/title').'<br>';
+
+if($order && $order instanceof Mage_Sales_Model_Order){
+    if($order->getState() == $order::STATE_NEW) {
+        $payment = $order->getPayment();
+        $data = $payment->getMethodInstance()->getInfoInstance()->getAdditionalInformation();
+        if (isset($data['pix']['pix_qrcode']) && $data['pix']['pix_qrcode']) {
+            $configWidth = Mage::helper('pagcommerce_payment')->getConfig('pix', 'qrcode_width');
+            $cssPix = '';
+            if($configWidth){
+                $cssPix = ' style="width: '.$configWidth.'px"';
+            }
+
+            ?>
+            <div style="text-align: left; display: flex; justify-content: left;">
+                <img <?php echo $cssPix; ?> src="<?php echo $data['pix']['pix_qrcode']; ?>" alt="Pix QR Code" />
+            </div>
+            <div style="text-align: left; display: flex; justify-content: left;">
+                <?php echo ($data['pix']['pix_string']); ?>
+            </div>
+            <?php
+        }
+    }
+}
+
+?>

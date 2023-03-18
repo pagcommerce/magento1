@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addJs"><file>pagcommerce_payment/vanilla-masker.min.js</file></action>
+        </reference>
+    </default>
+    <checkout_onepage_success>
+        <reference name="checkout.success">
+            <block type="Pagcommerce_Payment_Block_Checkout_Success" name="pagcommerce.payment.boleto.checkout.success" />
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>pagcommerce_payment/css/styles.min.css</name>
+            </action>
+        </reference>
+
+    </checkout_onepage_success>
+
+    <checkout_onepage_index>
+        <reference name="before_body_end">
+            <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
+        </reference>
+    </checkout_onepage_index>
+
+
+</layout>

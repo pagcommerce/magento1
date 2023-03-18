@@ -1,0 +1,186 @@
+<?php
+/** @var Pagcommerce_Payment_Block_Checkout_Success $this */
+$order = $this->getOrder();
+
+/** @var Pagcommerce_Payment_Helper_Data $helper */
+$helper = Mage::helper('pagcommerce_payment');
+
+if($order && $order->getId()):
+?>
+
+<div class="cctheme-onepagesuccess">
+   <?php
+    $payment = $order->getPayment();
+    $data = $payment->getMethodInstance()->getInfoInstance()->getAdditionalInformation();
+
+    if ($data && $order->getPayment()->getMethod() == 'pagcommerce_payment_boleto'):
+        if (isset($data['boleto']) && $data['boleto']):
+            ?>
+            <div class="cctheme-payment-block" id="boleto">
+                <div class="cctheme-payment-block-title">
+                    <img src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/boleto-icon.png"') ?>" alt="Boleto Bancário" class="cctheme-image" width="28" height="32">
+                    <span class="cctheme-text">Realize o pagamento do boleto bancário para finalizar a sua compra</span>
+                </div>
+                <div class="content">
+                    <div class="cctheme-payment-summary">
+                        <small class="cctheme-small summary-text">Utilize este código de barras e pague o boleto pelo celular</small>
+                        <div class="img-wrapper">
+                            <div class="img">
+                                <?php
+                                    /** @var Pagcommerce_Payment_Helper_Barcode $barcodeHelper */
+                                    $barcodeHelper = Mage::helper('pagcommerce_payment/barcode');
+                                ?>
+                                <?php echo $barcodeHelper->getImgBarCode($data['boleto']['boleto_barcode']); ?>
+                            </div>
+                        </div>
+
+                        <div class="input-barcode">
+                            <input class="input" type="text" readonly="" value="<?php echo $data['boleto']['boleto_digitable_line'] ?>">
+                        </div>
+
+                        <div class="actions-toolbar">
+                            <button type="button" title="Copiar código de barras" aria-label="Copiar código de barras" class="action copy primary" data-clipboard-text="<?php echo $data['boleto']['boleto_digitable_line'] ?>">
+                            <span class="cctheme-icon">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12.182 12.1818H16.0002V2H5.81836V5.81818" stroke="white" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M12.1818 5.81824H2V16.0001H12.1818V5.81824Z" stroke="white" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </span>
+                                <span class="cctheme-text">Copiar código</span>
+                            </button>
+                            <a href="<?php echo $data['boleto']['boleto_url']; ?>" target="_blank" title="Imprimir boleto" aria-label="Imprimir boleto" class="action secondary">
+                                <span class="cctheme-text">Imprimir boleto</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="cctheme-payment-content">
+                        <div class="title">
+                            <div class="label">
+                                <span class="cctheme-text">Valor:</span>
+                            </div>
+                            <div class="grand-total">
+                                <span class="price"><?php echo Mage::helper('core')->currency($order->getGrandTotal(), true, false); ?></span>
+                            </div>
+                        </div>
+                        <div class="cctheme-payment-steps">
+                            <div class="step">
+                                <p class="text-danger">Atenção, o boleto pode levar até 5 minutos para ser registrado</p>
+                            </div>
+                            <div class="step">
+                                <p class="cctheme-text"><strong class="cctheme-strong">1. </strong>Copie o código do boleto acima;</p>
+                            </div>
+                            <div class="step">
+                                <p class="cctheme-text"><strong class="cctheme-strong">2. </strong>Acesse o site ou o app do seu banco para seguir com o pagamento;</p>
+                            </div>
+                            <div class="step">
+                                <p class="cctheme-text"><strong class="cctheme-strong">3. </strong>Você tem até <?php echo $helper->getConfig('boleto', 'days'); ?> dias para pagar esse boleto.</p>
+                            </div>
+                            <div class="step">
+                                <p class="cctheme-text"><strong class="cctheme-strong">Atenção: </strong>o banco tem o prazo de até três dias úteis para confirmar o pagamento do boleto.
+                                    O prazo de entrega do produto começa a ser contado a partir dessa confirmação.</p>
+                            </div>
+                        </div>
+
+                        <div class="cctheme-payment-brand">
+                            <div>
+                                <small class="cctheme-small">pagamento processado por:</small>
+                            </div>
+                            <div>
+                                <a href="https://pagcommerce.com.br" target="_blank" title="Ir para o site da Pagcommerce" aria-label="Ir para o site da Pagcommerce">
+                                    <img class="cctheme-image"  src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/pagcommerce-pagamentos-online.webp') ?>"  alt="Pagcommerce - Pix para Ecommerce" width="96" height="21"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                <?php echo $barcodeHelper->getCss(); ?>
+            </style>
+        <?php endif; ?>
+    <?php endif; ?>
+
+
+
+    <?php if ($data && $order->getPayment()->getMethod() == 'pagcommerce_payment_pix'):
+        if (isset($data['pix']['pix_qrcode']) && $data['pix']['pix_string']):
+            ?>
+            <div class="cctheme-payment-block" id="pix">
+                    <div class="cctheme-payment-block-title">
+                        <img src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/pix-icon.svg"') ?>" alt="Logo Pix" class="cctheme-image" width="20" height="20">
+                        <span class="cctheme-text">Realize o pagamento utilizando o QR Code abaixo</span>
+                    </div>
+                    <div class="content">
+                        <div class="cctheme-payment-summary">
+                            <small class="cctheme-small summary-text">Escaneie o QR Code abaixo ultilizando a câmera do celular</small>
+                            <div class="img-wrapper">
+                                <div class="img">
+                                    <img src="<?php echo $data['pix']['pix_qrcode']; ?>" alt="Escaneie esse QR Code para realizar o pagamento" class="cctheme-image" width="150" height="150">
+                                </div>
+                            </div>
+                            <div class="actions-toolbar">
+                                <button type="button" title="Copiar código Pix" aria-label="Copiar código Pix" class="action copy primary" data-clipboard-text="<?php echo $data['pix']['pix_string']; ?>">
+                            <span class="cctheme-icon">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12.182 12.1818H16.0002V2H5.81836V5.81818" stroke="white" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M12.1818 5.81824H2V16.0001H12.1818V5.81824Z" stroke="white" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </span>
+                                    <span class="cctheme-text">Copiar código Pix</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="cctheme-payment-content">
+                            <div class="title">
+                                <div class="label">
+                                    <span class="cctheme-text">Valor:</span>
+                                </div>
+                                <div class="grand-total">
+                                    <span class="price"><?php echo Mage::helper('core')->currency($order->getGrandTotal(), true, false); ?></span>
+                                </div>
+                            </div>
+                            <div class="cctheme-payment-steps">
+                                <div class="step">
+                                    <p class="cctheme-text"><strong class="cctheme-strong">1. </strong>Abra o aplicativo do seu banco ou institução financeira e entre em Pix;</p>
+                                </div>
+                                <div class="step">
+                                    <p class="cctheme-text"><strong class="cctheme-strong">2. </strong>Escolha a opção pagar com QRCode e escanei o código ao lado;</p>
+                                </div>
+                                <div class="step">
+                                    <p class="cctheme-text"><strong class="cctheme-strong">3. </strong>Cole o código, confira as informações e finalize a compra.</p>
+                                </div>
+                            </div>
+
+                            <div class="cctheme-payment-brand">
+                                <div>
+                                    <small class="cctheme-small">pagamento processado por:</small>
+                                </div>
+                                <div>
+                                    <a href="https://pagcommerce.com.br" target="_blank" title="Ir para o site da Pagcommerce" aria-label="Ir para o site da Pagcommerce">
+                                        <img class="cctheme-image"  src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/pagcommerce-pagamentos-online.webp') ?>"  alt="Pagcommerce - Pix para Ecommerce" width="96" height="21"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <script src="<?php echo $this->getSkinUrl('pagcommerce_payment/vendor/clipboard.min.js') ?>"></script>
+    <script>
+        const clipboard = new ClipboardJS('.action.copy');
+
+        clipboard.on('success', function(e) {
+            const currentLabel = e.trigger.innerHTML;
+
+            e.trigger.innerHTML = '<span class="cctheme-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6875 4L6.6875 14L1.6875 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> </span><span class="cctheme-text">Código copiado!</span>';
+
+            setTimeout(() => {
+                e.trigger.innerHTML = currentLabel;
+            }, 1000);
+        });
+    </script>
+</div>
+<?php endif; ?>
+
