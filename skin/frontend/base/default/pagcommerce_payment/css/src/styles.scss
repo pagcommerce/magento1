@@ -44,6 +44,10 @@ $cctheme__text-danger__color: #FF0F00;
             color: $cctheme__text-secondary__color;
             text-align: left;
         }
+
+        img {
+            margin: 0;
+        }
     }
 
     .cctheme-payment-block > .content {
