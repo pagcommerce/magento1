@@ -234,7 +234,7 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
             $items[] = array(
                 'id' => $orderItem->getProduct()->getSku(),
                 'name' => $orderItem->getName(),
-                'qty' => $orderItem->getQtyOrdered(),
+                'qty' => (int)$orderItem->getQtyOrdered(),
                 'unit_price' =>  $this->formatCurrency($orderItem->getPrice()),
                 'total' =>  $this->formatCurrency($orderItem->getRowTotal())
             );
