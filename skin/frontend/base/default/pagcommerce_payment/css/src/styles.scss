@@ -113,6 +113,10 @@ $cctheme__text-danger__color: #FF0F00;
         flex-wrap: wrap;
     }
 
+    #boleto.cctheme-payment-block .cctheme-payment-summary .summary-text {
+        margin-bottom: 15px;
+    }
+
     .cctheme-payment-block .input-barcode {
         & {
             width: 100%;

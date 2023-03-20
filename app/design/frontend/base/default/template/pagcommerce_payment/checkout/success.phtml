@@ -24,7 +24,7 @@ if($order && $order->getId()):
                 <div class="content">
                     <div class="cctheme-payment-summary">
                         <small class="cctheme-small summary-text">Utilize este código de barras e pague o boleto pelo celular</small>
-                        <div class="img-wrapper">
+                        <!-- <div class="img-wrapper">
                             <div class="img">
                                 <?php
                                     /** @var Pagcommerce_Payment_Helper_Barcode $barcodeHelper */
@@ -32,25 +32,25 @@ if($order && $order->getId()):
                                 ?>
                                 <?php echo $barcodeHelper->getImgBarCode($data['boleto']['boleto_barcode']); ?>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="input-barcode">
                             <input class="input" type="text" readonly="" value="<?php echo $data['boleto']['boleto_digitable_line'] ?>">
                         </div>
 
                         <div class="actions-toolbar">
-                            <button type="button" title="Copiar código de barras" aria-label="Copiar código de barras" class="action copy primary" data-clipboard-text="<?php echo $data['boleto']['boleto_digitable_line'] ?>">
-                            <span class="cctheme-icon">
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12.182 12.1818H16.0002V2H5.81836V5.81818" stroke="white" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M12.1818 5.81824H2V16.0001H12.1818V5.81824Z" stroke="white" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                            </span>
-                                <span class="cctheme-text">Copiar código</span>
-                            </button>
-                            <a href="<?php echo $data['boleto']['boleto_url']; ?>" target="_blank" title="Imprimir boleto" aria-label="Imprimir boleto" class="action secondary">
+                            <a href="<?php echo $data['boleto']['boleto_url']; ?>" target="_blank" title="Imprimir boleto" aria-label="Imprimir boleto" class="action primary">
                                 <span class="cctheme-text">Imprimir boleto</span>
                             </a>
+                            <button type="button" title="Copiar código de barras" aria-label="Copiar código de barras" class="action copy secondary" data-clipboard-text="<?php echo $data['boleto']['boleto_digitable_line'] ?>">
+                                <span class="cctheme-icon">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12.182 12.1818H16.0002V2H5.81836V5.81818" stroke="#4a4948" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M12.1818 5.81824H2V16.0001H12.1818V5.81824Z" stroke="#4a4948" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </span>
+                                <span class="cctheme-text">Copiar código</span>
+                            </button>
                         </div>
                     </div>
                     <div class="cctheme-payment-content">
@@ -174,7 +174,7 @@ if($order && $order->getId()):
         clipboard.on('success', function(e) {
             const currentLabel = e.trigger.innerHTML;
 
-            e.trigger.innerHTML = '<span class="cctheme-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6875 4L6.6875 14L1.6875 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> </span><span class="cctheme-text">Código copiado!</span>';
+            e.trigger.innerHTML = '<span class="cctheme-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6875 4L6.6875 14L1.6875 9" stroke="#4a4948" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> </span><span class="cctheme-text">Código copiado!</span>';
 
             setTimeout(() => {
                 e.trigger.innerHTML = currentLabel;
