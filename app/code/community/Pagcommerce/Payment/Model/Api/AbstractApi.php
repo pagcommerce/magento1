@@ -200,7 +200,7 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
 
     public function getBaseData(Mage_Sales_Model_Order $order){
         $address = $order->getIsVirtual() ? $order->getBillingAddress() : $order->getShippingAddress();
-        $telephone = $address->getTelephone();
+        $telephone = $this->formatTelephone($address->getTelephone());
         $configStret = $this->getHelper()->getDefaultConfig('customer_address_street');
         $configNumber = $this->getHelper()->getDefaultConfig('customer_address_number');
         $configDistrict = $this->getHelper()->getDefaultConfig('customer_address_district');
