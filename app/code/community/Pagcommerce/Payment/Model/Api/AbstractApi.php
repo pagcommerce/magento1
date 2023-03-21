@@ -107,7 +107,7 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
     /**
      * @return string
      */
-    public function getSecret(): string
+    public function getSecret()
     {
         return $this->_secret;
     }
@@ -115,7 +115,7 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
     /**
      * @param string $secret
      */
-    public function setSecret(string $secret)
+    public function setSecret($secret)
     {
         $this->_secret = $secret;
     }
@@ -210,7 +210,7 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
             'customer_name' => $order->getCustomerName(),
             'customer_email' => $order->getCustomerEmail(),
             'customer_type' => strlen($order->getCustomerTaxvat()) > 12 ? 'PJ' : 'PF',
-            'customer_taxvat' => $order->getCustomerTaxvat(),
+            'customer_taxvat' => $this->formatCpfCnpj($order->getCustomerTaxvat()),
             'customer_phone'  => $telephone,
             'customer_address' => array(
                 'postalcode' => $address->getPostcode(),
