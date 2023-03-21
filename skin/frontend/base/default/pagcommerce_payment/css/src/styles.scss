@@ -12,11 +12,11 @@ $cctheme__text-danger__color: #FF0F00;
     }
 
     @media (min-width: 1440px) {
-        padding: 0 120px;
+        padding: 0 100px;
         margin: 40px 0;
     }
     @media (max-width: 1440px) and (min-width: 768px) {
-        padding: 0 60px;
+        padding: 0 30px;
     }
 
     .cctheme-payment-block {
@@ -102,15 +102,21 @@ $cctheme__text-danger__color: #FF0F00;
     }
     
     #boleto.cctheme-payment-block .cctheme-payment-summary {
-        flex: 0 0 100%;
+        flex: 0 0 400px;
 
-        // @media (min-width: 768px) {
-        //     flex: 0 0 452px;
-        // }
+        .actions-toolbar {
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 906px) {
+            flex: 0 0 100%;
+        }
     }
 
     #boleto.cctheme-payment-block > .content {
-        flex-wrap: wrap;
+        @media (max-width: 906px) {
+            flex-wrap: wrap;
+        }
     }
 
     #boleto.cctheme-payment-block .cctheme-payment-summary .summary-text {
@@ -195,6 +201,10 @@ $cctheme__text-danger__color: #FF0F00;
 
         .cctheme-image {
             margin-top: 4px;
+        }
+
+        .cctheme-small {
+            text-align: left;
         }
     }
 
