@@ -4,20 +4,23 @@ if (Mage::getSingleton('customer/session')->isLoggedIn()) {
     $customer = Mage::getSingleton('customer/session')->getCustomer();
     $attribute_config = Mage::getStoreConfig('payment/pagcommerce_payment/customer_taxvat_attribute');
 }
-?>
-<?php $_code = $this->getMethodCode() ?>
-
-<?php if($customer): ?>
-    <?php if (!$customer->getData($attribute_config)): ?>
-        <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
-            <li>
-                <p style="color: red; font-weight: bold;">Verificamos que sua conta não possui um CPF/CNPJ cadastrado, por favor cadastre agora no campo abaixo.</p>
-                <label for="cpfcnpj">CPF/CNPJ: </label>
-                <input type="text" id="cpfcnpjpix" name="cpfcnpjpix" class="pagcommerce_documento required-entry" maxlength="18">
-<!--                <a class="button pag_check_document_pix">Verificar Documento</a>-->
-            </li>
-        </ul>
-    <?php else: ?>
-        <input type="hidden" class="pg_has_document" value="1"/>
-    <?php endif; ?>
+$_code = $this->getMethodCode();
+$showDocument = false;
+if(!$customer){$showDocument = true;}
+if($showDocument):
+    $hasVat = false;
+    if($customer instanceof Mage_Customer_Model_Customer){
+        $hasVat = $customer->getData($attribute_config);
+    }
+    ?>
+    <?php if (!$hasVat): ?>
+    <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+        <li>
+            <label for="cpfcnpj">Informe seu CPF/CNPJ: </label>
+            <input type="text" id="cpfcnpjpix" name="cpfcnpjpix" class="pagcommerce_documento required-entry" maxlength="18">
+        </li>
+    </ul>
+<?php else: ?>
+    <input type="hidden" class="pg_has_document" value="1"/>
+<?php endif; ?>
 <?php endif; ?>
