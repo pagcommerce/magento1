@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Pagcommerce_Payment>
-            <version>1.2.0</version>
+            <version>1.3.0</version>
         </Pagcommerce_Payment>
     </modules>
     <global>
@@ -119,13 +119,13 @@
                 <active>0</active>
                 <model>Pagcommerce_Payment_Model_Method_Boleto</model>
                 <title>Pagcommerce - Boleto</title>
-                <days>3</days>
+                <days>5</days>
                 <allowspecific>0</allowspecific>
                 <auto_cancel>1</auto_cancel>
                 <payment_action>authorize</payment_action>
                 <create_invoice>1</create_invoice>
-                <free_installments>0</free_installments>
                 <dias_vencimento>3</dias_vencimento>
+                <cancel_order>1</cancel_order>
             </pagcommerce_payment_boleto>
             <pagcommerce_payment_pix>
                 <active>0</active>
@@ -136,6 +136,8 @@
                 <payment_action>authorize</payment_action>
                 <create_invoice>1</create_invoice>
                 <qrcode_width>150</qrcode_width>
+                <days>5</days>
+                <cancel_order>1</cancel_order>
             </pagcommerce_payment_pix>
         </payment>
     </default>
