@@ -16,29 +16,40 @@ class Pagcommerce_Payment_Model_Cron extends Varien_Object {
                 $storeId = Mage::app()->getStore()->getId();
                 Mage::app()->setCurrentStore($store);
 
-
-                $collection = $this->getCollectionOrderToCancel('pagcommerce_payment_pix');
-                if($collection->count()){
-                    /** @var Mage_Sales_Model_Order $order */
-                    foreach($collection as $order){
-                        if($order->canCancel()){
-                            $order->cancel();
-                            $order->save();
+                $canCancel = Mage::getStoreConfig('payment/pagcommerce_payment_pix/cancel_order');
+                if($canCancel){
+                    $days = Mage::getStoreConfig('payment/pagcommerce_payment_pix/days');
+                    $days = $days + 2;
+                    $validDate = strtotime(date('Y-m-d').' - '.$days.' days');
+                    $collection = $this->getCollectionOrderToCancel('pagcommerce_payment_pix', $validDate);
+                    if($collection->count()){
+                        /** @var Mage_Sales_Model_Order $order */
+                        foreach($collection as $order){
+                            if($order->canCancel()){
+                                $order->cancel();
+                                $order->save();
+                            }
                         }
                     }
                 }
 
-                $collection = $this->getCollectionOrderToCancel('pagcommerce_payment_boleto');
-                if($collection->count()){
-                    /** @var Mage_Sales_Model_Order $order */
-                    foreach($collection as $order){
-                        if($order->canCancel()){
-                            $order->cancel();
-                            $order->save();
+                $canCancel = Mage::getStoreConfig('payment/pagcommerce_payment_boleto/cancel_order');
+                if($canCancel){
+                    $days = Mage::getStoreConfig('payment/pagcommerce_payment_boleto/days');
+                    $days = $days + 2;
+                    $validDate = strtotime(date('Y-m-d').' - '.$days.' days');
+
+                    $collection = $this->getCollectionOrderToCancel('pagcommerce_payment_boleto', $validDate);
+                    if($collection->count()){
+                        /** @var Mage_Sales_Model_Order $order */
+                        foreach($collection as $order){
+                            if($order->canCancel()){
+                                $order->cancel();
+                                $order->save();
+                            }
                         }
                     }
                 }
-
             }
         }catch (Exception $e) {
             $helper->log('Error: '.$e->getMessage());
@@ -46,7 +57,7 @@ class Pagcommerce_Payment_Model_Cron extends Varien_Object {
         }
     }
 
-    private function getCollectionOrderToCancel($paymentMethod){
+    private function getCollectionOrderToCancel($paymentMethod, $validDate){
         $collection = Mage::getModel('sales/order')->getCollection()
             ->join(
                 array('payment' => 'sales/order_payment'),
@@ -57,7 +68,6 @@ class Pagcommerce_Payment_Model_Cron extends Varien_Object {
         $collection->addFieldToFilter('payment.method', $paymentMethod)
             ->addFieldToFilter('main_table.state', Mage_Sales_Model_Order::STATE_NEW);
 
-        $validDate = date('Y-m-d', strtotime('now - 1 days'));
         $collection->addFieldToFilter('created_at',array('gteq'=>$validDate.' 00:00:00'))
             ->addFieldToFilter('created_at',array("lteq" => $validDate.' 23:59:59'));
         return $collection;
