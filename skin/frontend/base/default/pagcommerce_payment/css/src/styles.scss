@@ -1,3 +1,11 @@
+//
+//  Pagcommerce Payment onepage-success
+//  ____________________________________________
+
+//
+//  Variables
+//  ____________________________________________
+
 $cctheme__text-primary__color: #383838;
 $cctheme__text-secondary__color: #4A4948;
 $cctheme__background-primary__color: #fff;
@@ -7,258 +15,288 @@ $cctheme__border__color: #dadada;
 $cctheme__text-danger__color: #FF0F00;
 
 .cctheme-onepagesuccess {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
     & {
-        margin: 20px 0;
+        margin: 20px 0 !important;
+        line-height: 1.5;
     }
 
     @media (min-width: 1440px) {
-        padding: 0 100px;
-        margin: 40px 0;
+        padding: 0 100px !important;
+        margin: 40px 0 !important;
     }
     @media (max-width: 1440px) and (min-width: 768px) {
-        padding: 0 30px;
+        padding: 0 30px !important;
     }
 
     .cctheme-payment-block {
-        background: $cctheme__background-primary__color;
-        border-radius: 8px;
-        padding: 18px 22px;
-        margin-bottom: 22px;
+        background: $cctheme__background-primary__color !important;
+        border-radius: 8px !important;
+        padding: 18px 22px !important;
+        margin-bottom: 22px !important;
+        max-width: 1040px;
+        width: 100%;
+        margin: 0 auto;
 
         .text-danger {
-            color: $cctheme__text-danger__color;
+            color: $cctheme__text-danger__color !important;
         }
     }
 
     .cctheme-payment-block > .cctheme-payment-block-title {
         & {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 30px;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            margin-bottom: 30px !important;
         }
 
         .cctheme-text {
-            font-size: 16px;
-            font-weight: 600;
-            color: $cctheme__text-secondary__color;
-            text-align: left;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            color: $cctheme__text-secondary__color !important;
+            text-align: left !important;
         }
 
         img {
-            margin: 0;
+            margin: 0 !important;
         }
     }
 
     .cctheme-payment-block > .content {
-        display: flex;
-        gap: 30px;
-        width: 100%;
-        flex-wrap: wrap;
+        display: flex !important;
+        gap: 30px !important;
+        width: 100% !important;
+        flex-wrap: wrap !important;
 
         @media (min-width: 768px) {
-            flex-wrap: nowrap;
+            flex-wrap: nowrap !important;
         }
     }
 
     .cctheme-payment-block .cctheme-payment-summary {
         & {
-            background: #F5F5F5;
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: fit-content;
+            background: #F5F5F5 !important;
+            border-radius: 8px !important;
+            padding: 16px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            height: fit-content !important;
         }
 
         .summary-text {
-            margin-bottom: 8px;
-            text-align: center;
+            margin-bottom: 8px !important;
+            text-align: center !important;
         }
 
         .img-wrapper {
-            margin-bottom: 16px;
+            margin-bottom: 16px !important;
         }
 
         .img-wrapper .img {
-            padding: 16px;
-            border-radius: 8px;
-            background: $cctheme__background-primary__color;
-            border: 1px dashed $cctheme__primary__color;
-            box-shadow: 0 4px 10px rgba(0,0,0, .05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 16px !important;
+            border-radius: 8px !important;
+            background: $cctheme__background-primary__color !important;
+            border: 1px dashed $cctheme__primary__color !important;
+            box-shadow: 0 4px 10px fade(black, 5%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
     }
 
     #pix.cctheme-payment-block .cctheme-payment-summary {
-        flex: 0 0 100%;
+        width: 100% !important;
 
         @media (min-width: 768px) {
-            flex: 0 0 250px;
+            flex: 0 0 250px !important;
         }
+    }
+
+    
+
+    #pix.cctheme-payment-block .cctheme-payment-summary .cctheme-image {
+        width: 150px !important;
+        height: 150px !important;
     }
     
     #boleto.cctheme-payment-block .cctheme-payment-summary {
-        flex: 0 0 400px;
+        flex: 0 0 400px !important;
 
         .actions-toolbar {
-            flex-wrap: wrap;
+            flex-wrap: wrap !important;
         }
 
         @media (max-width: 906px) {
-            flex: 0 0 100%;
+            width: 100% !important;
+            flex: 1 !important;
         }
     }
 
     #boleto.cctheme-payment-block > .content {
         @media (max-width: 906px) {
-            flex-wrap: wrap;
+            flex-wrap: wrap !important;
         }
     }
 
     #boleto.cctheme-payment-block .cctheme-payment-summary .summary-text {
-        margin-bottom: 15px;
+        margin-bottom: 15px !important;
     }
 
     .cctheme-payment-block .input-barcode {
         & {
-            width: 100%;
-            margin-bottom: 12px;
+            width: 100% !important;
+            margin-bottom: 12px !important;
         }
 
         > .input {
-            border: 1px solid $cctheme__border__color;
-            border-radius: 8px;
-            padding: 16px 20px;
-            color: $cctheme__text-secondary__color;
-            background: $cctheme__background-primary__color;
-            outline: none;
-            width: 100%;
-            max-width: -webkit-fill-available;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            border: 1px solid $cctheme__border__color !important;
+            border-radius: 8px !important;
+            padding: 16px 20px !important;
+            color: $cctheme__text-secondary__color !important;
+            background: $cctheme__background-primary__color !important;
+            outline: none !important;
+            width: 100% !important;
+            max-width: -webkit-fill-available !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            font-size: 14px !important;
+            height: auto !important;
         }
     }
 
     .cctheme-payment-block .actions-toolbar {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        width: 100%;
-        flex-wrap: wrap;
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        width: 100% !important;
+        flex-wrap: wrap !important;
 
         @media (min-width: 768px) {
-            flex-wrap: nowrap;
+            flex-wrap: nowrap !important;
         }
     }
 
     .cctheme-payment-block .cctheme-payment-content {
         & {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 10px;
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding-bottom: 10px !important;
         }
         
         > .title {
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid lighten($cctheme__border__color, 6%);
-            padding-bottom: 8px;
-            margin-bottom: 22px;
-            gap: 5px;
+            display: flex !important;
+            align-items: center !important;
+            border-bottom: 1px solid lighten($cctheme__border__color, 6%) !important;
+            padding-bottom: 8px !important;
+            margin-bottom: 22px !important;
+            gap: 5px !important;
         }
 
         .grand-total .price {
-            color: $cctheme__text-secondary__color;
-            font-weight: 600;
-            font-size: 16px;
+            color: $cctheme__text-secondary__color !important;
+            font-weight: 600 !important;
+            font-size: 16px !important;
         }
 
         .cctheme-text {
-            color: $cctheme__text-secondary__color;
+            color: $cctheme__text-secondary__color !important;
         }
     }
 
     .cctheme-payment-block .cctheme-payment-steps {
         & {
-            text-align: left;
+            text-align: left !important;
         }
 
         .step:not(:last-of-type) {
-            margin-bottom: 6px;
+            margin-bottom: 6px !important;
         }
     }
 
     .cctheme-payment-block .cctheme-payment-brand {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding-top: 30px;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding-top: 30px !important;
 
         .cctheme-image {
-            margin-top: 4px;
+            margin-top: 4px !important;
         }
 
         .cctheme-small {
-            text-align: left;
+            text-align: left !important;
         }
     }
 
     .cctheme-small {
-        font-size: 12px;
+        font-size: 12px !important;
     }
 
     .cctheme-strong {
-        font-weight: 600;
+        font-weight: 600 !important;
     }
 
     .cctheme-image {
-        max-width: 100%;
-        height: auto;
-        display: block;
+        max-width: 100% !important;
+        height: auto !important;
+        display: block !important;
     }
 
     .action {
-        border: none;
-        outline: none;
-        border-radius: 8px;
-        padding: 13px 28px;
-        font-size: 14px;
-        font-weight: 400;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        cursor: pointer;
-        transition: all .1s ease 0s;
-        width: 100%;
+        border: none !important;
+        outline: none !important;
+        border-radius: 8px !important;
+        padding: 13px 28px !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 12px !important;
+        cursor: pointer !important;
+        transition: all .1s ease 0s !important;
+        width: 100% !important;
     }
 
     .action .cctheme-icon {
-        width: 18px;
-        height: 18px;
+        width: 18px !important;
+        height: 18px !important;
     }
 
     .action.primary {
-        background: $cctheme__buy-button__color;
-        color: #fff;
-        font-weight: 500;
+        background: $cctheme__buy-button__color !important;
+        color: #fff !important;
+        font-weight: 500 !important;
 
         &:hover {
-            background: darken($cctheme__buy-button__color, 4%);
+            background: darken($cctheme__buy-button__color, 4%) !important;
+        }
+
+        &:hover,
+        &:active {
+            border: none !important;
         }
     }
 
     .action.secondary {
-        background: rgba($cctheme__text-secondary__color, .05);
-        color: $cctheme__text-secondary__color;
+        background: fade($cctheme__text-secondary__color, 5%) !important;
+        color: $cctheme__text-secondary__color !important;
 
         &:hover {
-            background: darken(rgba($cctheme__text-secondary__color, .05), 4%);
+            background: fade($cctheme__text-secondary__color, 4%) !important;
+        }
+
+        &:hover,
+        &:active {
+            border: none !important;
         }
     }
 }
