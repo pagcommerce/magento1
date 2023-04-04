@@ -42,7 +42,7 @@ if($order && $order->getId()):
                             <a href="<?php echo $data['boleto']['boleto_url']; ?>" target="_blank" title="Imprimir boleto" aria-label="Imprimir boleto" class="action primary">
                                 <span class="cctheme-text">Imprimir boleto</span>
                             </a>
-                            <button type="button" title="Copiar código de barras" aria-label="Copiar código de barras" class="action copy secondary" data-clipboard-text="<?php echo $data['boleto']['boleto_digitable_line'] ?>">
+                            <button type="button" title="Copiar código de barras" aria-label="Copiar código de barras" class="action copy secondary boleto" data-clipboard-text="<?php echo $data['boleto']['boleto_digitable_line'] ?>">
                                 <span class="cctheme-icon">
                                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M12.182 12.1818H16.0002V2H5.81836V5.81818" stroke="#4a4948" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -119,7 +119,7 @@ if($order && $order->getId()):
                                 </div>
                             </div>
                             <div class="actions-toolbar">
-                                <button type="button" title="Copiar código Pix" aria-label="Copiar código Pix" class="action copy primary" data-clipboard-text="<?php echo $data['pix']['pix_string']; ?>">
+                                <button type="button" title="Copiar código Pix" aria-label="Copiar código Pix" class="action copy primary pix" data-clipboard-text="<?php echo $data['pix']['pix_string']; ?>">
                             <span class="cctheme-icon">
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12.182 12.1818H16.0002V2H5.81836V5.81818" stroke="white" stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -169,12 +169,24 @@ if($order && $order->getId()):
 
     <script src="<?php echo $this->getSkinUrl('pagcommerce_payment/vendor/clipboard.min.js') ?>"></script>
     <script>
-        const clipboard = new ClipboardJS('.action.copy');
+         const clipboard = new ClipboardJS('.action.copy.pix');
 
-        clipboard.on('success', function(e) {
+        clipboard.on('success', function (e) {
             const currentLabel = e.trigger.innerHTML;
 
-            e.trigger.innerHTML = '<span class="cctheme-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6875 4L6.6875 14L1.6875 9" stroke="#4a4948" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> </span><span class="cctheme-text">Código copiado!</span>';
+            e.trigger.innerHTML = '<span class="cctheme-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6875 4L6.6875 14L1.6875 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> </span><span class="cctheme-text">Código copiado!</span>';
+
+            setTimeout(() => {
+                e.trigger.innerHTML = currentLabel;
+            }, 1000);
+        });
+
+        const clipboard2 = new ClipboardJS('.action.copy.boleto');
+
+        clipboard2.on('success', function (e) {
+            const currentLabel = e.trigger.innerHTML;
+
+            e.trigger.innerHTML = '<span class="cctheme-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6875 4L6.6875 14L1.6875 9" stroke="#4A4948" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> </span><span class="cctheme-text">Código copiado!</span>';
 
             setTimeout(() => {
                 e.trigger.innerHTML = currentLabel;
