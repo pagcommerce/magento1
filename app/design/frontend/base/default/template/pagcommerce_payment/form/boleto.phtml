@@ -1,25 +1,21 @@
 <?php
-$customer = false;
+$hasVat = false;
+
 if (Mage::getSingleton('customer/session')->isLoggedIn()) {
     $customer = Mage::getSingleton('customer/session')->getCustomer();
     $attribute_config = Mage::getStoreConfig('payment/pagcommerce_payment/customer_taxvat_attribute');
+    $hasVat = $customer->getData($attribute_config);
 }
 $_code = $this->getMethodCode();
-$showDocument = false;
-if(!$customer){$showDocument = true;}
-if($showDocument):
-    $hasVat = false;
-    if($customer instanceof Mage_Customer_Model_Customer){
-        $hasVat = $customer->getData($attribute_config);
-    }
-    ?>
+?>
 
-    <?php if(!$hasVat): ?>
+<?php if(!$hasVat): ?>
     <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
         <li>
             <label for="cpfcnpj"> Informe seu CPF/CNPJ: </label>
             <input type="text" id="cpfcnpjboleto" name="cpfcnpjboleto" class="pagcommerce_documento required-entry" maxlength="18">
         </li>
     </ul>
-<?php endif; ?>
+<?php else: ?>
+    <input type="hidden" class="pg_has_document" value="1"/>
 <?php endif; ?>

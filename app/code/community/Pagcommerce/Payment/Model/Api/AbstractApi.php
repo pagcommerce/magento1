@@ -206,6 +206,10 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
         $configDistrict = $this->getHelper()->getDefaultConfig('customer_address_district');
         $configStretComplement = $this->getHelper()->getDefaultConfig('customer_address_complement');
 
+        if(!$telephone){
+            $telephone = '1130902373';
+        }
+
         $taxvat = $order->getCustomerTaxvat();
         $taxvat = $this->formatCpfCnpj($taxvat);
         $data = array(
