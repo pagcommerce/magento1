@@ -104,7 +104,7 @@ $cctheme__text-danger__color: #FF0F00;
             border-radius: 8px !important;
             background: $cctheme__background-primary__color !important;
             border: 1px dashed $cctheme__primary__color !important;
-            box-shadow: 0 4px 10px fade(black, 5%) !important;
+            box-shadow: 0 4px 10px rgba(black, .05) !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -287,11 +287,11 @@ $cctheme__text-danger__color: #FF0F00;
     }
 
     .action.secondary {
-        background: fade($cctheme__text-secondary__color, 5%) !important;
+        background: rgba($cctheme__text-secondary__color, .05) !important;
         color: $cctheme__text-secondary__color !important;
 
         &:hover {
-            background: fade($cctheme__text-secondary__color, 4%) !important;
+            background: rgba($cctheme__text-secondary__color, .04) !important;
         }
 
         &:hover,

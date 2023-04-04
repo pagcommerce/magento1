@@ -75,7 +75,7 @@
     border-radius: 8px !important;
     background: #fff !important;
     border: 1px dashed #ff7820 !important;
-    box-shadow: 0 4px 10px fade(black, 5%) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .05) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -224,11 +224,11 @@
     border: none !important;
 }
 .cctheme-onepagesuccess .action.secondary {
-    background: fade(#4a4948, 5%) !important;
+    background: rgba(74, 73, 72, .05) !important;
     color: #4a4948 !important;
 }
 .cctheme-onepagesuccess .action.secondary:hover {
-    background: fade(#4a4948, 4%) !important;
+    background: rgba(74, 73, 72, .04) !important;
 }
 .cctheme-onepagesuccess .action.secondary:hover, .cctheme-onepagesuccess .action.secondary:active {
     border: none !important;
