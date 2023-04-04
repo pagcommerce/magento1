@@ -206,11 +206,13 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
         $configDistrict = $this->getHelper()->getDefaultConfig('customer_address_district');
         $configStretComplement = $this->getHelper()->getDefaultConfig('customer_address_complement');
 
+        $taxvat = $order->getCustomerTaxvat();
+        $taxvat = $this->formatCpfCnpj($taxvat);
         $data = array(
             'customer_name' => $order->getCustomerName(),
             'customer_email' => $order->getCustomerEmail(),
-            'customer_type' => strlen($order->getCustomerTaxvat()) > 12 ? 'PJ' : 'PF',
-            'customer_taxvat' => $this->formatCpfCnpj($order->getCustomerTaxvat()),
+            'customer_type' => strlen($taxvat) > 12 ? 'PJ' : 'PF',
+            'customer_taxvat' => $taxvat,
             'customer_phone'  => $telephone,
             'customer_address' => array(
                 'postalcode' => $address->getPostcode(),
