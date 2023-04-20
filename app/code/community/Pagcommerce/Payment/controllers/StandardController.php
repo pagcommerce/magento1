@@ -98,4 +98,53 @@ class Pagcommerce_Payment_StandardController extends Mage_Core_Controller_Front_
         return false;
     }
 
+
+    public function checkorderpaymentAction(){
+        $data = array(
+            'status' => false,
+            'paid' => false,
+            'message' => 'Pedido não encontrado'
+        );
+
+        /** @var Mage_Customer_Model_Session $session */
+        $session = Mage::getModel('customer/session');
+        if($session->isLoggedIn()){
+             $orderId = $this->getRequest()->getParam('order');
+             if($orderId){
+                 $order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
+                 if($order && $order instanceof Mage_Sales_Model_Order && $order->getId()){
+                     if($order->getState() == Mage_Sales_Model_Order::STATE_PROCESSING){
+                         $data = array(
+                             'status' => true,
+                             'paid' => true,
+                             'message' => 'Pedido pago'
+                         );
+                     }else{
+                         $data = array(
+                             'status' => true,
+                             'paid' => false,
+                             'message' => 'Pedido não pago'
+                         );
+                     }
+                 }else{
+                     $data['message'] = 'Pedido não encontrado';
+                 }
+             }else{
+                 $data['message'] = 'Order Increment Id não informado';
+             }
+        }else{
+            $data['message'] = 'Cliente não logado';
+        }
+
+        // Make sure the content type for this response is JSON
+        $this->getResponse()->clearHeaders()->setHeader(
+            'Content-type',
+            'application/json'
+        );
+
+        // Set the response body / contents to be the JSON data
+        $this->getResponse()->setBody(
+            Mage::helper('core')->jsonEncode($data)
+        );
+    }
 }
