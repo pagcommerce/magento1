@@ -165,8 +165,36 @@ if($order && $order->getId()):
                     </div>
             </div>
 
-            <div class="cctheme-payment-block" id="pix">
-                RESPOSTA SUCESSO
+            <div class="cctheme-payment-block -success" id="pix">
+                <div class="success-container">
+                    <div style="display: flex;">
+                        <svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_4848_3194" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="9" y="6" width="122" height="128">
+                            <path d="M69.999 11.9049L85.1826 22.9812L103.979 22.9465L109.752 40.8327L124.978 51.8511L119.137 69.7142L124.978 87.5772L109.752 98.5957L103.979 116.482L85.1826 116.447L69.999 127.523L54.8154 116.447L36.0187 116.482L30.2465 98.5957L15.0195 87.5772L20.8612 69.7142L15.0195 51.8511L30.2465 40.8327L36.0187 22.9465L54.8154 22.9812L69.999 11.9049Z" fill="white" stroke="white" stroke-width="11.5618" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M49.7656 69.7142L64.2179 84.1665L93.1226 55.2618" stroke="black" stroke-width="11.5618" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_4848_3194)">
+                            <path d="M0.628906 0.343018H139.371V139.085H0.628906V0.343018Z" fill="#5ECF38"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="cctheme-text">Pagamento confirmado!</h3>
+                    </div>
+                    <div>
+                        <p class="cctheme-text">Recebemos o seu pagamento e já estamos separando o seu pedido.</p>
+                    </div>
+                </div>
+                <div class="cctheme-payment-brand">
+                    <div>
+                        <small class="cctheme-small">Processado por:</small>
+                    </div>
+                    <div>
+                        <a href="https://pagcommerce.com.br" target="_blank" title="Ir para o site da Pagcommerce" aria-label="Ir para o site da Pagcommerce">
+                            <img class="cctheme-image"  src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/pagcommerce-pagamentos-online.webp') ?>"  alt="Pagcommerce - Pix para Ecommerce" width="96" height="21"/>
+                        </a>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
     <?php endif; ?>

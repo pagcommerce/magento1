@@ -48,6 +48,46 @@ $cctheme__text-danger__color: #FF0F00;
         }
     }
 
+    .cctheme-payment-block.-success {
+        & {
+            text-align: center;
+            padding-top: 30px !important;
+            padding-bottom: 30px !important;
+        }
+        
+        .cctheme-payment-brand {
+            justify-content: center;
+            padding: 0 !important;
+            margin-top: 40px;
+        }
+
+        h3 {
+            font-size: 16px !important;
+            margin: 0 !important;
+            font-weight: 600 !important;
+            text-transform: none !important;
+            color: $cctheme__text-primary__color !important;
+        }
+        
+        .cctheme-text {
+            line-height: 22px !important;
+            color: $cctheme__text-secondary__color !important;
+        }
+    }
+
+    .success-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+
+        @media (min-width: 768px) {
+            max-width: 360px;
+            margin: 0 auto;
+        }
+    }
+
     .cctheme-payment-block > .cctheme-payment-block-title {
         & {
             display: flex !important;
@@ -233,6 +273,7 @@ $cctheme__text-danger__color: #FF0F00;
 
         .cctheme-small {
             text-align: left !important;
+            color: $cctheme__text-secondary__color;
         }
     }
 

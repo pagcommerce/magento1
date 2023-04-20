@@ -28,6 +28,40 @@
 .cctheme-onepagesuccess .cctheme-payment-block .text-danger {
     color: #ff0f00 !important;
 }
+.cctheme-onepagesuccess .cctheme-payment-block.-success {
+    text-align: center;
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+}
+.cctheme-onepagesuccess .cctheme-payment-block.-success .cctheme-payment-brand {
+    justify-content: center;
+    padding: 0 !important;
+    margin-top: 40px;
+}
+.cctheme-onepagesuccess .cctheme-payment-block.-success h3 {
+    font-size: 16px !important;
+    margin: 0 !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    color: #383838 !important;
+}
+.cctheme-onepagesuccess .cctheme-payment-block.-success .cctheme-text {
+    line-height: 22px !important;
+    color: #4a4948 !important;
+}
+.cctheme-onepagesuccess .success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+@media (min-width: 768px) {
+    .cctheme-onepagesuccess .success-container {
+        max-width: 360px;
+        margin: 0 auto;
+   }
+}
 .cctheme-onepagesuccess .cctheme-payment-block > .cctheme-payment-block-title {
     display: flex !important;
     align-items: center !important;
@@ -181,6 +215,7 @@
 }
 .cctheme-onepagesuccess .cctheme-payment-block .cctheme-payment-brand .cctheme-small {
     text-align: left !important;
+    color: #4a4948;
 }
 .cctheme-onepagesuccess .cctheme-small {
     font-size: 12px !important;
