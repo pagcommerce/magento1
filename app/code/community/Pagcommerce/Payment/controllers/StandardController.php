@@ -113,7 +113,7 @@ class Pagcommerce_Payment_StandardController extends Mage_Core_Controller_Front_
              if($orderId){
                  $order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
                  if($order && $order instanceof Mage_Sales_Model_Order && $order->getId()){
-                     if($order->getState() == Mage_Sales_Model_Order::STATE_PROCESSING){
+                     if($order->getState() == Mage_Sales_Model_Order::STATE_PROCESSING || $order->getState() == Mage_Sales_Model_Order::STATE_COMPLETE){
                          $data = array(
                              'status' => true,
                              'paid' => true,
