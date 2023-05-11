@@ -7,7 +7,22 @@ if (Mage::getSingleton('customer/session')->isLoggedIn()) {
 }
 $_code = $this->getMethodCode();
 
-if(!$hasVat):?>
+/** @var Pagcommerce_Payment_Model_Method_Pix $method */
+$method = $this->getMethod();
+$instructions = $method->getConfigData('instructions');
+?>
+
+<?php if($instructions): ?>
+    <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+        <li>
+           <?php echo nl2br($instructions) ?>
+        </li>
+
+    </ul>
+<?php endif; ?>
+
+
+<? if(!$hasVat):?>
     <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
         <li>
             <label for="cpfcnpjpix">Informe seu CPF/CNPJ: </label>
@@ -17,3 +32,4 @@ if(!$hasVat):?>
 <?php else: ?>
     <input type="hidden" class="pg_has_document" value="1"/>
 <?php endif; ?>
+

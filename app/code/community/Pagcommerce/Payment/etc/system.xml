@@ -150,6 +150,16 @@
                             <show_in_store>0</show_in_store>
                             <depends><active>1</active></depends>
                         </order_status>
+                        <instructions>
+                            <label>Instruções/Descrição</label>
+                            <comment>Mensagem que apacerá ao clicar na forma de pagamento Boleto no checkout</comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>47</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><active>1</active></depends>
+                        </instructions>
                         <comments>
                             <label>Comentário Boleto</label>
                             <comment>Mensagem que apacerá como informação adicional no boleto</comment>
@@ -222,6 +232,18 @@
                             <show_in_store>20</show_in_store>
                             <depends><active>1</active></depends>
                         </title>
+
+                        <instructions>
+                            <label>Instruções/Descrição</label>
+                            <comment>Mensagem que apacerá ao clicar na forma de pagamento Pix no checkout</comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>47</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><active>1</active></depends>
+                        </instructions>
+
                         <days>
                             <label>Qtd Dias Vencimento</label>
                             <comment>Quantidade de dias para o vencimento do boleto</comment>

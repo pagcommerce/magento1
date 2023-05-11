@@ -74,12 +74,17 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
         if($order && $order->getId()){
             $api = $this->_getApi();
             $pixResponse = $api->getPixResponse($order);
-            if($pixResponse){
+            if($pixResponse && !isset($pixResponse['detail'])){
                 $info = $this->getInfoInstance();
                 $info->setAdditionalInformation('pix', $pixResponse['payment_data']);
                 $info->save();
             }else{
-                Mage::throwException('Ocorreu um erro ao gerar o QR Code PIX: '.utf8_encode($api->getErrors()));
+                if(isset($pixResponse['detail']) && $pixResponse['detail']){
+                    $message = $pixResponse['detail'];
+                }else{
+                    $message = 'Ocorreu um erro ao gerar o QR Code PIX. '.$api->getErrors();
+                }
+                throw new Mage_Payment_Model_Info_Exception($message);
             }
         }
         return $this;

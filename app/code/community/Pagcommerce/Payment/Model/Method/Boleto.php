@@ -81,7 +81,12 @@ class Pagcommerce_Payment_Model_Method_Boleto extends Mage_Payment_Model_Method_
                 $info->setAdditionalInformation('boleto', $boletoResponse['payment_data']);
                 $info->save();
             }else{
-                Mage::throwException('Ocorreu um erro ao gerar o boleto bancário: '.utf8_encode($api->getErrors()));
+                if(isset($boletoResponse['detail']) && $boletoResponse['detail']){
+                    $message = $boletoResponse['detail'];
+                }else{
+                    $message = 'Ocorreu um erro ao gerar o Boleto. '.$api->getErrors();
+                }
+                throw new Mage_Payment_Model_Info_Exception($message);
             }
         }
         return $this;

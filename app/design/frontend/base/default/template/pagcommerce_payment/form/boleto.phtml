@@ -7,7 +7,20 @@ if (Mage::getSingleton('customer/session')->isLoggedIn()) {
     $hasVat = $customer->getData($attribute_config);
 }
 $_code = $this->getMethodCode();
+/** @var Pagcommerce_Payment_Model_Method_Pix $method */
+$method = $this->getMethod();
+$instructions = $method->getConfigData('instructions');
 ?>
+
+<?php if($instructions): ?>
+    <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+        <li>
+            <?php echo nl2br($instructions) ?>
+        </li>
+
+    </ul>
+<?php endif; ?>
+
 
 <?php if(!$hasVat): ?>
     <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">

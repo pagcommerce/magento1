@@ -19,9 +19,6 @@ if($order && $order instanceof Mage_Sales_Model_Order){
             <div style="text-align: left; display: flex; justify-content: left;">
                 <img <?php echo $cssPix; ?> src="<?php echo $data['pix']['pix_qrcode']; ?>" alt="Pix QR Code" />
             </div>
-            <div style="text-align: left; display: flex; justify-content: left;">
-                <?php echo ($data['pix']['pix_string']); ?>
-            </div>
             <?php
         }
     }
