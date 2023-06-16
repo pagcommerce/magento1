@@ -1,6 +1,64 @@
 <script>
-    jQuery(document).on('click', 'input[name="payment[method]"]', function(){
-        checkPagcommerceDocument(this);
+    jQuery(document).on('click', 'input[name="payment[method]"]', function()
+    {
+        // 29/05/2023 - author: Murilo - bugfix js validate checkout - remove required input in other forms of payment
+        let  elementMethod = jQuery(this);
+        let  elementId = jQuery(elementMethod).attr('id');
+
+        if (elementId !== 'p_method_pagcommerce_payment_pix' && elementId !== 'p_method_pagcommerce_payment_boleto')
+        {
+            jQuery('.pagcommerce_documento').removeClass('required-entry');
+
+            if (jQuery('#payment_form_pagcommerce_payment_pix_no_vat').length)
+            {
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat').hide();
+            }
+
+            if (jQuery('#payment_form_pagcommerce_payment_boleto_no_vat').length)
+            {
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat').hide();
+            }
+
+        }else
+        {
+            if (elementId == 'p_method_pagcommerce_payment_pix')
+            {
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat').show();
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat').hide();
+
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').addClass('required-entry');
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeClass('disabled');
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeClass('validation-passed');
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeAttr('disabled');
+
+
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeClass('required-entry');
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeClass('validation-passed');
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').addClass('disabled');
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').attr('disabled', 'disabled');
+
+            }
+
+            if (elementId == 'p_method_pagcommerce_payment_boleto')
+            {
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat').show();
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat').hide();
+
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').addClass('required-entry');
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeClass('disabled');
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeClass('validation-passed');
+                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeAttr('disabled');
+
+
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeClass('required-entry');
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeClass('validation-passed');
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').addClass('disabled');
+                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').attr('disabled', 'disabled');
+            }
+        }
+        // 29/05/2023 - author: Murilo - bugfix js validate checkout - remove required input in other forms of payment
+
+        // checkPagcommerceDocument(this);
     });
 
 
@@ -23,6 +81,7 @@
 
 
     function validatePagDocument(inputDocument){
+
         var doc = jQuery(inputDocument).val();
         var url = "<?php echo Mage::getBaseUrl().'pagcommerce/standard/validatecpfcnpj/documento/'?>";
         $j.ajax({
@@ -67,8 +126,11 @@
 
 
 
-    function checkPagcommerceDocument(paymentMethodElement){
+    function checkPagcommerceDocument(paymentMethodElement)
+    {
         return true;
+
+
         elementMethod = jQuery(paymentMethodElement);
         if(elementMethod.length){
             var submitPaymentButton = jQuery('button[onclick="payment.save()"]');

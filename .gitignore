@@ -1606,3 +1606,6 @@ shell/compiler.php
 skin/adminhtml/default/default/images/login_logo.gif
 skin/adminhtml/default/default/images/logo.gif
 skin/install/default/default/images/logo.gif
+.modgit/
+modgit
+app/code/local/
