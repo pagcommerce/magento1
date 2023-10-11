@@ -1,9 +1,9 @@
 <?php
-$hasVat = false;
+$taxVat = '';
 if (Mage::getSingleton('customer/session')->isLoggedIn()) {
     $customer = Mage::getSingleton('customer/session')->getCustomer();
     $attribute_config = Mage::getStoreConfig('payment/pagcommerce_payment/customer_taxvat_attribute');
-    $hasVat = $customer->getData($attribute_config);
+    $taxVat = $customer->getData($attribute_config);
 }
 $_code = $this->getMethodCode();
 
@@ -12,24 +12,25 @@ $method = $this->getMethod();
 $instructions = $method->getConfigData('instructions');
 ?>
 
-<?php if($instructions): ?>
-    <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+
+
+<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+    <?php if($instructions): ?>
         <li>
-           <?php echo nl2br($instructions) ?>
+            <?php echo nl2br($instructions) ?>
         </li>
+    <?php endif; ?>
+    <li>
+        <label for="cpfcnpjpix">Informe seu CPF/CNPJ: </label>
+        <input type="text" id="cpfcnpjpix" name="cpfcnpjpix" value="<?php echo $taxVat; ?>" class="pagcommerce_documento required-entry input-text" maxlength="18">
+    </li>
+</ul>
 
-    </ul>
-<?php endif; ?>
 
 
-<?php if(!$hasVat):?>
-    <ul class="form-list" id="payment_form_<?php echo $_code ?>_no_vat" style="display:none;">
-        <li>
-            <label for="cpfcnpjpix">Informe seu CPF/CNPJ: </label>
-            <input type="text" id="cpfcnpjpix" name="cpfcnpjpix" class="pagcommerce_documento required-entry input-text" maxlength="18">
-        </li>
-    </ul>
-<?php else: ?>
-    <input type="hidden" class="pg_has_document" value="1"/>
-<?php endif; ?>
-
+<script type="text/javascript">
+    jQuery(document).on('click', 'input[name="payment[method]"]', function(){
+        applyPagcommerceValidations('pix');
+    });
+    applyPagcommerceValidations('pix');
+</script>

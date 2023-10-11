@@ -1,118 +1,26 @@
 <script>
-    jQuery(document).on('click', 'input[name="payment[method]"]', function()
-    {
-        // 29/05/2023 - author: Murilo - bugfix js validate checkout - remove required input in other forms of payment
-        let  elementMethod = jQuery(this);
-        let  elementId = jQuery(elementMethod).attr('id');
 
-        if (elementId !== 'p_method_pagcommerce_payment_pix' && elementId !== 'p_method_pagcommerce_payment_boleto')
-        {
-            jQuery('.pagcommerce_documento').removeClass('required-entry');
+    function applyPagcommerceValidations(method){
+        inputMethood = jQuery('input[name="payment[method]"]:checked');
+        if(jQuery(inputMethood).length){
+            elementId = jQuery(inputMethood).attr('id');
+            elementTargetName = 'p_method_pagcommerce_payment_'+method;
 
-            if (jQuery('#payment_form_pagcommerce_payment_pix_no_vat').length)
-            {
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat').hide();
+            elementDocument =  jQuery('#cpfcnpj'+method);
+            if(elementId == elementTargetName){
+                  console.log('Obriga '+method);
+                  jQuery(elementDocument).addClass('required-entry');
+                  jQuery(elementDocument).removeClass('validation-passed');
+            }else{
+                console.log('Não Obriga '+method);
+                jQuery(elementDocument).removeClass('required-entry');
+                jQuery(elementDocument).addClass('validation-passed');
             }
-
-            if (jQuery('#payment_form_pagcommerce_payment_boleto_no_vat').length)
-            {
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat').hide();
-            }
-
-        }else
-        {
-            if (elementId == 'p_method_pagcommerce_payment_pix')
-            {
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat').show();
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat').hide();
-
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').addClass('required-entry');
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeClass('disabled');
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeClass('validation-passed');
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeAttr('disabled');
-
-
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeClass('required-entry');
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeClass('validation-passed');
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').addClass('disabled');
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').attr('disabled', 'disabled');
-
-            }
-
-            if (elementId == 'p_method_pagcommerce_payment_boleto')
-            {
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat').show();
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat').hide();
-
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').addClass('required-entry');
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeClass('disabled');
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeClass('validation-passed');
-                jQuery('#payment_form_pagcommerce_payment_boleto_no_vat > li > input').removeAttr('disabled');
-
-
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeClass('required-entry');
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').removeClass('validation-passed');
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').addClass('disabled');
-                jQuery('#payment_form_pagcommerce_payment_pix_no_vat > li > input').attr('disabled', 'disabled');
-            }
+            return true;
         }
-        // 29/05/2023 - author: Murilo - bugfix js validate checkout - remove required input in other forms of payment
-
-        // checkPagcommerceDocument(this);
-    });
-
-
-    // jQuery(document).on('click', '.pag_check_document_pix', function(){
-    //     if(validatePagDocument(jQuery('#cpfcnpjpix'))){
-    //         payment.save();
-    //     }else{
-    //         return false;
-    //     }
-    // });
-    //
-    // jQuery(document).on('click', '.pag_check_document_boleto', function(){
-    //     if(validatePagDocument(jQuery('#cpfcnpjboleto'))){
-    //         payment.save();
-    //     }else{
-    //         return false;
-    //     }
-    // });
-
-
-
-    function validatePagDocument(inputDocument){
-
-        var doc = jQuery(inputDocument).val();
-        var url = "<?php echo Mage::getBaseUrl().'pagcommerce/standard/validatecpfcnpj/documento/'?>";
-        $j.ajax({
-            url: url,
-            type: "POST",
-            data: ({documento: doc}),
-            dataType: 'json',
-            success: function(data) {
-                var submitPaymentButton = jQuery('button[onclick="payment.save()"]');
-
-                if(!data.status){
-                    alert('CPF/CNPJ INVÁLIDO!');
-                    jQuery('.pagcommerce_documento').val('');
-                    jQuery(submitPaymentButton).attr('disabled', 'disabled');
-                }else{
-                    if(submitPaymentButton.length){
-                        jQuery(submitPaymentButton).removeAttr('disabled');
-                    }
-                    return true;
-                }
-            }
-        });
-        return false;
     }
 
-    jQuery(document).on('change', '.pagcommerce_documento', function(){
-
-
-    });
-
-    jQuery(document).on('keyup', '.pagcommerce_documento', function(){
+     jQuery(document).on('keyup', '.pagcommerce_documento', function(){
         var cpfcnpj = $j(this).val();
         elementId = jQuery(this).attr('id');
         if (cpfcnpj.length >= 14){
@@ -123,32 +31,6 @@
         }
 
     });
-
-
-
-    function checkPagcommerceDocument(paymentMethodElement)
-    {
-        return true;
-
-
-        elementMethod = jQuery(paymentMethodElement);
-        if(elementMethod.length){
-            var submitPaymentButton = jQuery('button[onclick="payment.save()"]');
-            if(submitPaymentButton.length){
-                elementId = jQuery(elementMethod).attr('id');
-                elementHasDocument  = jQuery('.pg_has_document');
-                if(elementId == 'p_method_pagcommerce_payment_boleto' || elementId == 'p_method_pagcommerce_payment_pix'){
-                    if(!jQuery(elementHasDocument).length){
-                        jQuery(submitPaymentButton).attr('disabled', 'disabled');
-                    }
-                }else{
-                    jQuery(submitPaymentButton).removeAttr('disabled');
-                }
-            }
-        }
-    }
-
-
 
 
 </script>

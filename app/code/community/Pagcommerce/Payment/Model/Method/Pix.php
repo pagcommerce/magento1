@@ -29,6 +29,7 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
      * @return $this
      */
     public function initialize($paymentAction,$objectState) {
+
         parent::initialize($paymentAction, $objectState);
         $quote = $this->getQuote();
         $orderId = $quote->getReservedOrderId();
@@ -46,7 +47,7 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
 
                 if (strlen($cpfcnpj) == 11){
                     if (!$helper->validarCpf($cpfcnpj)){
-                        throw new Mage_Payment_Model_Info_Exception('Porfavor, digite um CPF válido!');
+                        throw new Mage_Payment_Model_Info_Exception('Por favor, digite um CPF válido! ('.$cpfcnpj.')');
                     } else{
                         $order->setData('customer_taxvat', $cpfcnpj);
                         $order->save();
@@ -55,7 +56,7 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
                     }
                 } else if (strlen($cpfcnpj) == 14){
                     if (!$helper->validarCnpj($cpfcnpj)){
-                        throw new Mage_Payment_Model_Info_Exception('Por favor, digite um CNPJ válido!');
+                        throw new Mage_Payment_Model_Info_Exception('Por favor, digite um CNPJ válido! ('.$cpfcnpj.')');
                     } else{
                         $order->setData('customer_taxvat', $cpfcnpj);
                         $order->save();
@@ -63,7 +64,7 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
                         $customer->save();
                     }
                 } else{
-                    throw new Mage_Payment_Model_Info_Exception('O CPF/CNPJ informado é inválido!');
+                    throw new Mage_Payment_Model_Info_Exception('O CPF/CNPJ informado é inválido! ('.$cpfcnpj.')');
                 }
 
             } else{
