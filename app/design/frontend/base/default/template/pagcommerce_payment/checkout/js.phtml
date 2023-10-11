@@ -8,11 +8,9 @@
 
             elementDocument =  jQuery('#cpfcnpj'+method);
             if(elementId == elementTargetName){
-                  console.log('Obriga '+method);
                   jQuery(elementDocument).addClass('required-entry');
                   jQuery(elementDocument).removeClass('validation-passed');
             }else{
-                console.log('Não Obriga '+method);
                 jQuery(elementDocument).removeClass('required-entry');
                 jQuery(elementDocument).addClass('validation-passed');
             }
