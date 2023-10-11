@@ -30,5 +30,10 @@
         </reference>
     </firecheckout_index_index>
 
+    <onestepcheckout_index_index>
+        <reference name="before_body_end">
+            <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
+        </reference>
+    </onestepcheckout_index_index>
 
 </layout>
