@@ -4,6 +4,9 @@ $data = $this->getInfo()->getAdditionalInformation();
 $order = $this->getInfo()->getOrder();
 echo "Forma de Pagamento: ".Mage::getStoreConfig('payment/pagcommerce_payment_pix/title').'<br>';
 
+/** @var Pagcommerce_Payment_Helper_Image $helperImage */
+$helperImage = Mage::helper('pagcommerce_payment/image');
+
 if($order && $order instanceof Mage_Sales_Model_Order){
     if($order->getState() == $order::STATE_NEW) {
         $payment = $order->getPayment();
@@ -15,9 +18,11 @@ if($order && $order instanceof Mage_Sales_Model_Order){
                 $cssPix = ' style="width: '.$configWidth.'px"';
             }
 
+            $imgJpg = $helperImage->convertBase64ToImage($data['pix']['pix_qrcode'], $order);
+
             ?>
             <div style="text-align: left; display: flex; justify-content: left;">
-                <img <?php echo $cssPix; ?> src="<?php echo $data['pix']['pix_qrcode']; ?>" alt="Pix QR Code" />
+                <img <?php echo $cssPix; ?> src="<?php echo $imgJpg; ?>" alt="Pix QR Code" />
             </div>
             <?php
         }
