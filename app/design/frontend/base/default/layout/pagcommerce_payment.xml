@@ -35,5 +35,11 @@
             <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
         </reference>
     </onestepcheckout_index_index>
+ 
+   <idecheckoutvm_index_index>
+        <reference name="after_body_start">
+            <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
+        </reference>
+    </idecheckoutvm_index_index> 
 
 </layout>
