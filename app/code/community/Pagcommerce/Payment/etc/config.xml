@@ -140,6 +140,22 @@
                 <cancel_order>1</cancel_order>
                 <instructions><![CDATA[<img src="/skin/frontend/base/default/pagcommerce_payment/img/pix-pagcommerce.svg" style="width: 130px; margin-top: 15px; margin-bottom: 15px;"/> <p>O QRCODE Pix será apresentado assim que finalizar esse Pedido.</p>]]></instructions>
             </pagcommerce_payment_pix>
+
+            <pagcommerce_payment_cc>
+                <active>0</active>
+                <model>Pagcommerce_Payment_Model_Method_Cc</model>
+                <title>Pagcommerce - Cartão de Crédito</title>
+                <allowspecific>0</allowspecific>
+                <auto_cancel>1</auto_cancel>
+                <payment_action>authorize</payment_action>
+                <create_invoice>1</create_invoice>
+                <free_installments>0</free_installments>
+                <label_install> com juros (total %s)</label_install>
+                <label_nofee> sem juros</label_nofee>
+                <customer_attribute>taxvat</customer_attribute>
+            </pagcommerce_payment_cc>
+
+
         </payment>
     </default>
     <crontab>

@@ -100,8 +100,8 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
 
     /** @return string */
     private function getApiUrl(){
-        $sandboxUrl = Mage::getStoreConfig('payment/pagcommerce_payment/sandbox_api_url');
-        return $this->getEnvironment() == Pagcommerce_Payment_Model_Source_Environment::TEST ? $sandboxUrl.'/' : 'https://api.pagcommerce.com.br/';
+        $sandboxUrl = 'https://api-sandbox.pagcommerce.com.br/';
+        return $this->getEnvironment() == Pagcommerce_Payment_Model_Source_Environment::TEST ? $sandboxUrl : 'https://api.pagcommerce.com.br/';
     }
 
     /**

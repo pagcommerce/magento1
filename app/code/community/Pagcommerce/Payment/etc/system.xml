@@ -22,17 +22,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </enviroment>
-                        <sandbox_api_url>
-                            <label>URL Api Sandbox</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>31</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enviroment>development</enviroment>
-                            </depends>
-                        </sandbox_api_url>
                         <api_key>
                             <label>Api_Key</label>
                             <frontend_type>text</frontend_type>
@@ -293,6 +282,149 @@
                         </cancel_order>
                     </fields>
                 </pagcommerce_payment_pix>
+                <pagcommerce_payment_cc translate="label comment" module="pagcommerce_payment">
+                    <label>Pagcommerce Cartão de Crédito</label>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Ativar</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <title translate="label">
+                            <label>Título</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>20</show_in_store>
+                            <depends><active>1</active></depends>
+                        </title>
+                        <order_status translate="label">
+                            <label>Status novo pedido</label>
+                            <frontend_type>select</frontend_type>
+                            <comment>Status para novos pedidos usando essa forma de pagamento</comment>
+                            <source_model>adminhtml/system_config_source_order_status_new</source_model>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><active>1</active></depends>
+                        </order_status>
+                        <min_order_total translate="label">
+                            <label>Valor mínimo do pedido</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>85</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </min_order_total>
+                        <max_order_total translate="label">
+                            <label>Valor máximo do pedido</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </max_order_total>
+
+
+
+                        <descriptor>
+                            <label>Nome Loja</label>
+                            <comment>Aparecerá na fatura do Cartão. Não colocar caracteres especiais ou acentuação. Não utizar caracteres especiais ou acentuação</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </descriptor>
+
+
+                        <payment_action translate="label">
+                            <label>Payment Action</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>pagcommerce_payment/source_paymentaction</source_model>
+                            <sort_order>43</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payment_action>
+
+                        <order_status translate="label">
+                            <label>Status novo pedido</label>
+                            <frontend_type>select</frontend_type>
+                            <comment>Status para novos pedidos usando essa forma de pagamento</comment>
+                            <source_model>adminhtml/system_config_source_order_status_new</source_model>
+                            <sort_order>44</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </order_status>
+
+                        <label_install>
+                            <label>Mensagem de juros</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Mensagem adicional exibida no seletor de parcelamento. Usar %s para inserir o valor total</comment>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </label_install>
+                        <label_nofee>
+                            <label>Mensagem sem juros</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Mensagem adicional exibida no seletor de parcelamento para parcelas sem juros</comment>
+                            <sort_order>46</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </label_nofee>
+
+
+                        <installments>
+                            <label>Parcelamento</label>
+                            <frontend_model>pagcommerce_payment/adminhtml_config_installments</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>51</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Crie configurações de parcelamento]]></comment>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </installments>
+
+                        <documento_obrigatorio>
+                            <label>Documento obrigatório?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Habilite se quiser que o CPF/CNPJ seja informado no pagamento</comment>
+                        </documento_obrigatorio>
+                        <customer_attribute translate="label">
+                            <label>Atributo de CPF/CNPJ do cliente</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>pagcommerce_payment/source_customerattributes</source_model>
+                            <show_in_default>1</show_in_default>
+                            <sort_order>56</sort_order>
+                            <depends><documento_obrigatorio>1</documento_obrigatorio></depends>
+                        </customer_attribute>
+
+
+                    </fields>
+                </pagcommerce_payment_cc>
             </groups>
         </payment>
     </sections>
