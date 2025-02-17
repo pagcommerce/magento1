@@ -2,7 +2,7 @@
 <layout>
     <default>
         <reference name="head">
-            <action method="addJs"><file>pagcommerce_payment/vanilla-masker.min.js</file></action>
+            <action method="addJs"><file>pagcommerce_payment/inputmask.min.js</file></action>
         </reference>
     </default>
     <checkout_onepage_success>

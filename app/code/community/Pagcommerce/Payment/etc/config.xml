@@ -147,12 +147,13 @@
                 <title>Pagcommerce - Cartão de Crédito</title>
                 <allowspecific>0</allowspecific>
                 <auto_cancel>1</auto_cancel>
-                <payment_action>authorize</payment_action>
+                <payment_action>authorize_capture</payment_action>
                 <create_invoice>1</create_invoice>
                 <free_installments>0</free_installments>
                 <label_install> com juros (total %s)</label_install>
                 <label_nofee> sem juros</label_nofee>
                 <customer_attribute>taxvat</customer_attribute>
+                <brands>visa,mastercard,americanexpress,dinersclub,elo,hipercard,hiper</brands>
             </pagcommerce_payment_cc>
 
 

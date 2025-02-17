@@ -1,6 +1,6 @@
 <?php
 
-class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Cc {
+class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abstract {
 
     protected $_code          = 'pagcommerce_payment_cc';
 
@@ -22,6 +22,11 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Cc {
     protected $_canCancelInvoice = true;
 
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Initialize
      *
@@ -34,10 +39,11 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Cc {
         /** @var Mage_Sales_Model_Order_Payment $payment */
         $payment = $this->getInfoInstance();
 
-        /** @var Codecia_Cielo_Helper_Data $helper */
-        $helper = Mage::helper('codecia_cielo');
+        /** @var Pagcommerce_Payment_Helper_Data $helper */
+        $helper = Mage::helper('pagcommerce_payment');
 
-        if ($payment->getAdditionalInformation()['document_number']){
+        $additional = $payment->getAdditionalInformation();
+        if (isset($additional['document_number']) && $additional['document_number']){
             $doc = str_replace(array('-','.','/'), array('', '', ''), trim($payment->getAdditionalInformation()['document_number']));
             if (strlen($doc) > 11){
                 $validate_cpfcnpj = $helper->validarCnpj($doc);
@@ -58,15 +64,23 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Cc {
         $parcel = $parcels[$parcelQty];
         $payment->getOrder()->addStatusHistoryComment($parcel['label']);
         $payment->getOrder()->save();
+
         $onlyAuthorize = $paymentAction == 'authorize' ? true : false;
-        $response = $this->getApi()->processPayment($payment, $onlyAuthorize);
-        if(is_array($response) && isset($response['Payment']['Tid'])){
-            $paymentStatus = (string)$response['Payment']['Status'];
-            if($paymentStatus == Codecia_Cielo_Model_Source_Payment_Status::STATUS_PAYMENTCONFIRMED && !$onlyAuthorize){
-                $this->confirmPayment($payment->getOrder(), 'Pagamento confirmado');
+
+        $response = $this->getApi()->processPayment($payment->getOrder(), $parcelQty, $parcel);
+        if($response && isset($response['id'])){
+            switch ($response['status']){
+                case 'denied':
+                case 'denied_risk':
+                    throw new Mage_Payment_Model_Info_Exception($helper->__('Pagamento não aprovado. Por favor tente novamente com outro cartão'));
+                    break;
+                case 'approved':
+                    $this->confirmPayment($payment->getOrder(), 'Pagamento confirmado');
+                    break;
+
             }
         }else{
-            throw new Mage_Payment_Model_Info_Exception($helper->__('Ocorreu um erro no pagamento. Por favor tente novamente ou utilize outro cartão de crédito'));
+            throw new Mage_Payment_Model_Info_Exception($helper->__('Ocorreu um erro ao processar seu pagamento. Por favor tente novamente'));
         }
 
         return $this;
@@ -83,33 +97,7 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Cc {
 
     public function capture(Varien_Object $payment, $amount)
     {
-        parent::capture($payment, $amount);
-
-        /** @var Codecia_Cielo_Helper_Data $helper */
-        $helper = Mage::helper('codecia_cielo');
-
-        $info = $payment->getAdditionalInformation();
-
-        /** @var Mage_Sales_Model_Order $order */
-        $order = $payment->getOrder();
-
-        if(isset($info['installments']) && isset($info['response_cielo']['Payment']['PaymentId'])){
-            $paymentId = $info['response_cielo']['Payment']['PaymentId'];
-            $response = $this->getApi()->capture($paymentId, $order);
-            if(isset($response[0]['Message'])){
-                throw new Exception($response[0]['Message']);
-            }else{
-                $historyComment = 'Transação capturada';
-                $historyComment .= '<br>ReturnCode: '.$response['ReturnCode'];
-                $historyComment .= '<br>ReturnMessage: '.$response['ReturnMessage'];
-                $historyComment .= '<br>Tid: '.$response['Tid'];
-                $historyComment .= '<br>ProofOfSale (NSU): '.$response['ProofOfSale'];
-                $historyComment .= '<br>Código de Autorização: '.$response['AuthorizationCode'];
-
-                $order->addStatusHistoryComment($historyComment);
-                $order->save();
-            }
-        }
+        return parent::capture($payment, $amount);
     }
 
 
@@ -118,9 +106,9 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Cc {
     }
 
 
-    /** @return Codecia_Cielo_Model_Api_Cc */
+    /** @return Pagcommerce_Payment_Model_Api_Cc */
     private function getApi(){
-        return Mage::getModel('codecia_cielo/api_cc');
+        return Mage::getModel('pagcommerce_payment/api_cc');
     }
 
     /**
@@ -133,70 +121,132 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Cc {
             $data = new Varien_Object($data);
         }
 
-        /** @var Codecia_Cielo_Helper_Data $helper */
-        $helper = Mage::helper('codecia_cielo');
+        /** @var Pagcommerce_Payment_Helper_Data $helper */
+        $helper = Mage::helper('pagcommerce_payment');
 
-        if(!$data->getCcType())
-            throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o tipo do cartão'));
-
-
-        if(!$data->getCcNumber()){
-            throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o número do cartão de crédito'));
-        }
-
-        if(!$data->getCcName()){
-            throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o nome do titular do cartão'));
-        }
-
-
-        if(!$data->getCcExpMonth()){
-            throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o mês de vencimento do cartão'));
-        }
-
-        if(!$data->getCcExpYear()){
-            throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o ano de vencimento do cartão'));
-
-        }
-
-        if(!$data->getCcCid()){
-            throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o código de segurança do cartão'));
-        }
-
-        $allowedBrands = $this->getConfigData('cc_brands');
-        if(!$allowedBrands){
-            throw new Mage_Payment_Model_Info_Exception($helper->__('Nenhuma bandeira de cartão foi permitida para receber pagamentos'));
-        }
-        $allowedBrands = explode(',', $allowedBrands);
-
-        if(!in_array($data->getData('cc_type'), $allowedBrands)){
-            throw new Mage_Payment_Model_Info_Exception($helper->__('Bandeira '.$data->getData('cc_type').' não permitida para essa compra'));
-        }
         /** @var Mage_Sales_Model_Quote_Payment $info */
         $info = $this->getInfoInstance();
 
-        $ccNumber = $data->getCcNumber();
-        $ccNumber = str_replace(array(' ', '-', '.'), '', $ccNumber);
-        $info->setCcType($data->getCcType())
-            ->setCcNumber($ccNumber)
-            ->setCcName($data->getCcName())
-            ->setCcExpMonth($data->getCcExpMonth())
-            ->setCcExpYear($data->getCcExpYear())
-            ->setCcCid(trim($data->getCcCid()))
-            ->setCcLast4(substr($ccNumber, -4))
-        ;
+        /** @var Pagcommerce_Payment_Model_Source_CreditCard_Brand $sourceCards */
+        $sourceCards = Mage::getModel('Pagcommerce_Payment_Model_Source_CreditCard_Brand');
+        $allCards = $sourceCards->toArray();
 
-        if($data->getCcCpf()){
-            $documentNumber = trim($data->getCcCpf());
-            $documentNumber = str_replace(array(' ', '.', '-'), '', $documentNumber);
-            $info->setAdditionalInformation('document_number', $documentNumber);
+
+        if($data->getData('cc_savedcard_id')){
+            /** @var Mage_Customer_Model_Session $session */
+            $session = Mage::getSingleton('customer/session');
+            if($session->isLoggedIn()){
+                $email  = $session->getCustomer()->getEmail();
+
+                /** @var Pagcommerce_Payment_Model_Api_CreditCardToken $api */
+                $api = Mage::getModel('Pagcommerce_Payment_Model_Api_CreditCardToken');
+                $cards = $api->getCardByCustomerEmail($email);
+                if($cards){
+                    $currentCard = false;
+                    foreach($cards as $card){
+                        if($card['id'] == $data->getData('cc_savedcard_id')){
+                            $currentCard = $card;
+                            break;
+                        }
+                    }
+
+                    if($currentCard){
+                        $brandName =  $allCards[$currentCard['card_brand']];
+                        $last4 = $currentCard['last4_digits'];
+                        $data->setCcCid($data->getData('cc_cards_cvv'));
+                        $info->setAdditionalInformation('card_id', $currentCard['id']);
+
+                        $info->setCcCid(trim($data->getData('cc_cards_cvv')));
+                        $info->setCcLast4($last4);
+
+                    }else{
+                        throw new Mage_Payment_Model_Info_Exception($helper->__('Cartão de crédito não existe'));
+                    }
+
+                }else{
+                    throw new Mage_Payment_Model_Info_Exception($helper->__('Cartão de crédito inexistente'));
+                }
+            }else{
+                throw new Mage_Payment_Model_Info_Exception($helper->__('Cartão de crédito salvo inválido'));
+            }
+        }else{
+            if(!$data->getCcNumber()){
+                throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o número do cartão de crédito'));
+            }
+            if(!$data->getCcName()){
+                throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o nome do titular do cartão'));
+            }
+
+            if(!$data->getCcExpMonth()){
+                throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o mês de vencimento do cartão'));
+            }
+
+
+            if(!$data->getCcExpYear()){
+                throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o ano de vencimento do cartão'));
+
+            }
+
+            if(!$data->getCcCid()){
+                throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o código de segurança do cartão'));
+            }
+
+            $allowedBrands = $helper->getConfigCc('brands');
+            if(!$allowedBrands){
+                throw new Mage_Payment_Model_Info_Exception($helper->__('Nenhuma bandeira de cartão foi permitida para receber pagamentos'));
+            }
+            $allowedBrands = explode(',', $allowedBrands);
+
+            /** @var Pagcommerce_Payment_Model_CreditCard_Issuer $issuer */
+            $issuer = Mage::getModel('Pagcommerce_Payment_Model_CreditCard_Issuer');
+            $brand = $issuer->getCardIssuer($data->getCcNumber());
+
+
+
+            if(!in_array($brand, $allowedBrands)){
+                throw new Mage_Payment_Model_Info_Exception($helper->__('Bandeira '.$allCards[$brand].' não permitida para essa compra. Por favor utilize outro cartão'));
+            }
+
+            $ccNumber = $data->getCcNumber();
+            $ccNumber = str_replace(array(' ', '-', '.'), '', $ccNumber);
+            $info->setCcType($data->getCcType())
+                ->setCcNumber($ccNumber)
+                ->setCcName($data->getCcName())
+                ->setCcExpMonth($data->getCcExpMonth())
+                ->setCcExpYear($data->getCcExpYear())
+                ->setCcCid(trim($data->getCcCid()))
+                ->setCcLast4(substr($ccNumber, -4))
+            ;
+
+            if($data->getCcCpf()){
+                $documentNumber = trim($data->getCcCpf());
+                $documentNumber = str_replace(array(' ', '.', '-'), '', $documentNumber);
+                $info->setAdditionalInformation('document_number', $documentNumber);
+            }
+
+            $info->setAdditionalInformation('cc_save_card', $data->getData('cc_save_card'));
+            $info->setCcOwner($data->getCcName());
+
+
+            $brandName = $allCards[$brand];
+            $last4 = substr($ccNumber, -4);
         }
 
+
+
+        $parcelAvailable = $helper->getInterestsByTotal($this->getInfoInstance()->getQuote()->getGrandTotal());
+        $currentParcel = $parcelAvailable[$data->getCcInterest()];
+
+        $paymentDescription =  $brandName.' de final '.$last4.' <br>'.$currentParcel['label'];
+
+
+
         $info->setAdditionalInformation('installments', $data->getCcInterest());
-        $info->setAdditionalInformation('last_digits', substr($ccNumber, -4) );
-        $info->setAdditionalInformation('payment_method', 'codecia_cielo_cc');
-        $info->setCcOwner($data->getCcName());
 
-
+        $info->setAdditionalInformation('last_digits', $last4);
+        $info->setAdditionalInformation('brand', $brandName);
+        $info->setAdditionalInformation('payment_description', $paymentDescription);
+        $info->setAdditionalInformation('payment_method', 'pagcommerce_payment_cc');
         return $this;
     }
 

@@ -1,0 +1,228 @@
+<?php
+/** @var Pagcommerce_Payment_Block_Form_Cc $this */
+?>
+
+<?php $_code = $this->getMethodCode() ?>
+
+<?php
+  $savedCards = array(
+          array(
+                  "id" => 4,
+                  "card_brand" => "visa",
+                  "first4_digits" => "1234",
+                  "last4_digits" => "1111",
+                  "expiration_month" => "12",
+                  'expiration_year' =>  "2024",
+                  'holder_name' => 'JOAO SILVA',
+                  'customer_id' =>  18887
+          ),
+      array(
+          "id" => 5,
+          "card_brand" => "mastercard",
+          "first4_digits" => "1216",
+          "last4_digits" => "9871",
+          "expiration_month" => "11",
+          'expiration_year' =>  "2028",
+          'holder_name' => 'JOAO SILVA',
+          'customer_id' =>  18887
+      ),
+  );
+  $savedCards = array();
+
+  $savedCards = $this->getCreditCardSaved();
+
+  $styleFormCard = $savedCards ? 'display: none;' : '';
+
+  /** @var Pagcommerce_Payment_Model_Source_CreditCard_Brand $sourceBrands */
+  $sourceBrands = Mage::getModel('Pagcommerce_Payment_Model_Source_CreditCard_Brand');
+  $brands = $sourceBrands->toArray();
+
+?>
+<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+
+    <li style="<?php echo !$savedCards ? 'display:none;' : ''; ?>">
+        <ul>
+            <?php foreach($savedCards as $savedCard): ?>
+                <li>
+                    <div>
+                        <input value="<?php echo $savedCard['id'] ?>" type="radio" name="payment[cc_cards]" class="radio"/>
+                        <label><img src="<?php $savedCard['card_brand'] ?>.png"/> <?php echo $brands[$savedCard['card_brand']]; ?> final <?php echo $savedCard['last4_digits'] ?></label>
+                        <div style="display: none;" class="cvv_content cvv_content_<?php echo $savedCard['id'] ?>">
+                            <label for="<?php echo $_code ?>_cc_cid" class="required"><em>*</em><?php echo $this->__('Código de segurança') ?></label>
+                            <div class="input-box">
+                                <div class="v-fix">
+                                    <input type="text" class="input-text cvv_saved cvv_saved_<?php echo $savedCard['id'] ?>" id="saved_card_id_<?php echo $savedCard['id'] ?>" name="payment[cc_cards_cvv]" value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+            <li><button class="pag-add-card">Adicionar novo cartão de crédito</button></li>
+        </ul>
+    </li>
+
+
+    <li class="pag_card_form" style="<?php echo $styleFormCard; ?>">
+        <input type="hidden" name="payment[cc_savedcard_id]"/>
+        <label for="<?php echo $_code ?>_cc_number" class="required"><em>*</em><?php echo $this->__('Número do cartão de crédito') ?></label>
+        <div class="input-box">
+            <input type="text" id="<?php echo $_code ?>_cc_number" name="payment[cc_number]" title="<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Credit Card Number')) ?>" class="input-text pag-validate-bin" value="" />
+        </div>
+    </li>
+    <li class="pag_card_form" style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_exp_div">
+        <label for="<?php echo $_code ?>_expiration" class="required"><em>*</em><?php echo $this->__('Data de expiração') ?></label>
+        <div class="input-box">
+            <div class="v-fix">
+                <select id="<?php echo $_code ?>_expiration" name="payment[cc_exp_month]" class="month validate-cc-exp required-entry">
+                    <?php $_ccExpMonth = $this->getInfoData('cc_exp_month') ?>
+                    <?php foreach ($this->getCcMonths() as $k=>$v): ?>
+                        <option value="<?php echo $k?$k:'' ?>"<?php if($k==$_ccExpMonth): ?> selected="selected"<?php endif ?>><?php echo $this->__($v) ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+            <div class="v-fix">
+                <?php $_ccExpYear = $this->getInfoData('cc_exp_year') ?>
+                <select id="<?php echo $_code ?>_expiration_yr" name="payment[cc_exp_year]" class="year required-entry">
+                    <?php foreach ($this->getCcYears() as $k=>$v): ?>
+                        <option value="<?php echo $k?$k:'' ?>"<?php if($k==$_ccExpYear): ?> selected="selected"<?php endif ?>><?php echo $v ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+        </div>
+    </li>
+    <li class="pag_card_form" style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_cvv_div">
+        <label for="<?php echo $_code ?>_cc_cid" class="required"><em>*</em><?php echo $this->__('Código de segurança') ?></label>
+        <div class="input-box">
+            <div class="v-fix">
+                <input type="text" title="<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Card Verification Number')) ?>" class="input-text cvv required-entry" id="<?php echo $_code ?>_cc_cid" name="payment[cc_cid]" value="" />
+            </div>
+        </div>
+    </li>
+
+
+    <!--Implementação de CPF-->
+    <?php
+    if(Mage::getStoreConfig('payment/pagcommerce_payment_cc/documento_obrigatorio')){
+        $customer = Mage::getSingleton('customer/session')->getCustomer();
+        if ($customer && $customer->getId()){
+            $attribute = Mage::getStoreConfig('payment/pagcommerce_payment_cc/customer_attribute');
+            if ($attribute){
+                $find = array('-', '/', '.');
+                $replace = array('', '', '');
+                $customer_cpf = str_replace($find, $replace, $customer->getData($attribute));
+            }
+        }
+    }
+    ?>
+
+    <li class="pag_card_form" style="<?php echo $styleFormCard; ?>">
+        <label for="<?php echo $_code ?>_cc_name" class="required"><em>*</em><?php echo $this->__('Nome do titular do cartão') ?></label>
+        <div class="input-box">
+            <input type="text" id="<?php echo $_code ?>_cc_number" name="payment[cc_name]" title="<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Credit card holder name')) ?>" class="input-text required-entry" value="" />
+        </div>
+    </li>
+
+    <?php if (Mage::getStoreConfig('payment/pagcommerce_payment_cc/documento_obrigatorio')): ?>
+        <li class="pag_card_form"  style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_cpf">
+            <label for="<?php echo $_code ?>_cpf" class="required"><em>*</em><?php echo $this->__('CPF/CNPJ') ?></label>
+            <div class="input-box">
+                <div class="v-fix">
+                    <input type="text" title="CPF" class="input-text validate-cpfcnpj required-entry" id="<?php echo $_code ?>_cpf" name="payment[cc_cpf]" value="<?php echo isset($customer_cpf) ? $customer_cpf : ''; ?>"  data-inputmask="'mask': ['999.999.999-99', '99.999.999/9999-99']" />
+                </div>
+            </div>
+        </li>
+    <?php endif; ?>
+
+    <?php
+    $parcels = $this->getInterests();
+    $oneParcel = !$parcels || sizeof($parcels) == 1;
+    ?>
+
+    <li id="<?php echo $_code ?>_cc_type_interest_div">
+        <label for="<?php echo $_code ?>_cc_interest" class="required"><em>*</em><?php echo $this->__('Parcelamento') ?></label>
+        <div class="input-box">
+            <div class="v-fix">
+                <select id="<?php echo $_code ?>_cc_interest" name="payment[cc_interest]" class="required-entry">
+                    <option value=""><?php echo $this->__('--Please Select--')?></option>
+                    <?php foreach ($this->getInterests() as $parcel): ?>
+                        <option value="<?php echo $parcel['parcel'] ?>"><?php echo $parcel['label'] ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+        </div>
+    </li>
+
+    <li class="pag_card_form"  style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_save_card_div">
+        <label for="<?php echo $_code ?>_save_card" class="required"><em>*</em><?php echo $this->__('Salvar cartão de crédito para futuras compras?') ?></label>
+        <div class="input-box">
+            <div class="v-fix">
+                <input type="checkbox" class="input-checkbox" id="<?php echo $_code ?>_cc_save_card" name="payment[cc_save_card]" value="1" />
+            </div>
+        </div>
+    </li>
+</ul>
+
+<script>
+    jQuery('.validate-cpfcnpj').change(function(){
+        var documento = jQuery('.validate-cpfcnpj').val();
+        documento = documento.replace(/[.,/\s-]/g, '');
+        var url = '<?php echo Mage::getBaseUrl() . 'pagcommerce/check/validateCpfCnpj/documento/'?>' + documento;
+
+        jQuery.get(url, function(data){
+            // console.log(data);
+            if (!data.status){
+                alert('CPF/CNPJ INVÁLIDO!');
+                jQuery('.validate-cpfcnpj').val('');
+            }
+        }, 'json');
+    });
+
+
+    jQuery('.pag-validate-bin').change(function(){
+        var cardNumber = jQuery('.pag-validate-bin').val();
+        cardNumber = cardNumber.replace(/[.,/\s-]/g, '');
+
+        var url = '<?php echo Mage::getBaseUrl() . 'pagcommerce/check/validatebin/number/'?>' + cardNumber;
+
+        jQuery.get(url, function(data){
+            if (!data.status){
+                alert(data.message);
+                jQuery('.pag-validate-bin').val('');
+            }
+        }, 'json');
+    });
+    Inputmask().mask(document.querySelectorAll("input[data-inputmask]"));
+
+    <?php if($savedCards): ?>
+        jQuery(document).ready(function(){
+            jQuery('input[name="payment[cc_cards]"]').click(function(){
+                cardId = jQuery(this).val();
+
+                jQuery('.pag_card_form').hide();
+                jQuery('.cvv_content').hide();
+
+
+                jQuery('input[name="payment[cc_savedcard_id]"]').val(cardId);
+
+                jQuery('.cvv_content_'+cardId).show();
+                jQuery('#saved_card_id_'+cardId).show();
+                jQuery('.cvv_saved').removeClass('required-entry');
+                jQuery('.cvv_saved_'+cardId).addClass('required-entry');
+                jQuery('.pag-add-card').show();
+            });
+
+            jQuery('.pag-add-card').click(function(){
+                jQuery('input[name="payment[cc_cards]"]').prop('checked', false);
+                jQuery('.cvv_saved').removeClass('required-entry');
+                jQuery('.cvv_saved').hide();
+                jQuery('.cvv_content').hide();
+                jQuery('input[name="payment[cc_savedcard_id]"]').val('');
+
+                jQuery('.pag_card_form').show();
+                jQuery(this).hide();
+
+            });
+        });
+    <?php endif; ?>
+</script>

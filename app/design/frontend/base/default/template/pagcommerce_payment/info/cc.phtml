@@ -1,0 +1,7 @@
+<?php
+ /** @var Pagcommerce_Payment_Block_Info_Cc $this */
+ /** @var Pagcommerce_Payment_Model_Method_Cc $instance */
+ $instance = $this->getMethod();
+ $additional = $instance->getInfoInstance()->getAdditionalInformation();
+echo $instance->getTitle(). ' '.$additional['payment_description'];
+?>
