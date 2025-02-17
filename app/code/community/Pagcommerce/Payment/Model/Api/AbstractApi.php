@@ -37,6 +37,8 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
 
 
                 $ch = curl_init($this->getApiUrl().$uri);
+                curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+
 //                curl_setopt_array($ch, [
 //                    CURLOPT_RETURNTRANSFER => true,
 //                    CURLOPT_ENCODING => "",
@@ -55,7 +57,7 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
                     'Content-Type: application/json',
                     'Authorization: Bearer ' . base64_encode($this->getKey().':'.$this->getSecret())
                 ));
-
+                curl_setopt($ch, CURLOPT_TIMEOUT, 40);
                 switch ($method){
                     case 'POST':
                         curl_setopt($ch, CURLOPT_POST, 1);
@@ -75,11 +77,21 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
                     Mage::log('RESPONSE :'.$response, null, 'pagcommerce_payment.log');
                 }
                 $error = curl_error($ch);
+                $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
 
                 if(!$error && $response){
-                    $response = json_decode($response, true);
-                    return $response;
+                    if($httpCode == 404){
+                        $this->addErros('Nenhum registro encontrado');
+                    }else{
+                        if($httpCode == 403){
+                            $this->addErros('Acesso não autorizado');
+                        }else{
+                            $response = json_decode($response, true);
+                            return $response;
+                        }
+                    }
+
                 }else{
                     $this->addErros($error);
                 }

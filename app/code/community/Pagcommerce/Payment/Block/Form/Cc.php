@@ -23,7 +23,11 @@ class Pagcommerce_Payment_Block_Form_Cc extends Mage_Payment_Block_Form_Cc
 
             /** @var Pagcommerce_Payment_Model_Api_CreditCardToken $api */
             $api = Mage::getModel('Pagcommerce_Payment_Model_Api_CreditCardToken');
-            return $api->getCardByCustomerEmail($email);
+            $response = $api->getCardByCustomerEmail($email);
+            if(!$response){
+                return array();
+            }
+            return $response;
         }
         return array();
     }
