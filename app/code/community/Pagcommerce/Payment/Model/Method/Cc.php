@@ -67,7 +67,8 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
 
         $onlyAuthorize = $paymentAction == 'authorize' ? true : false;
 
-        $response = $this->getApi()->processPayment($payment->getOrder(), $parcelQty, $parcel);
+        $api = $this->getApi();
+        $response = $api->processPayment($payment->getOrder(), $parcelQty, $parcel);
         if($response && isset($response['id'])){
             switch ($response['status']){
                 case 'denied':
@@ -80,6 +81,9 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
 
             }
         }else{
+            if($api->getErrors()) {
+                throw new Mage_Payment_Model_Info_Exception($api->getErrors());
+            }
             throw new Mage_Payment_Model_Info_Exception($helper->__('Ocorreu um erro ao processar seu pagamento. Por favor tente novamente'));
         }
 
@@ -151,12 +155,14 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
                     }
 
                     if($currentCard){
+                        $cvv = trim($data->getData('cc_card_cvv_'.$currentCard['id']));
+
                         $brandName =  $allCards[$currentCard['card_brand']];
                         $last4 = $currentCard['last4_digits'];
-                        $data->setCcCid($data->getData('cc_cards_cvv'));
+                        $data->setCcCid($cvv);
                         $info->setAdditionalInformation('card_id', $currentCard['id']);
 
-                        $info->setCcCid(trim($data->getData('cc_cards_cvv')));
+                        $info->setCcCid($cvv);
                         $info->setCcLast4($last4);
 
                     }else{

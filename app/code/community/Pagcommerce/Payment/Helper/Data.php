@@ -54,6 +54,17 @@ class Pagcommerce_Payment_Helper_Data extends Mage_Core_Helper_Abstract
         /** @var Mage_Core_Helper_Data $helperCore */
         $helperCore = Mage::helper('core');
 
+
+        /** @var Mage_Core_Helper_Data $helperCore */
+        $helperCore = Mage::helper('core');
+        if($helperCore->isModuleEnabled('Codecia_Productinstallment')){
+            /** @var Codecia_Productinstallment_Helper_Data $helperInstallment */
+            $helperInstallment = Mage::helper('codecia_productinstallment');
+            $installmentsCodecia = $helperInstallment->getInterestsByTotal($orderTotal);
+            return $installmentsCodecia;
+        }
+
+
         if($configInterest){
             $installments = array();
 
@@ -184,5 +195,9 @@ class Pagcommerce_Payment_Helper_Data extends Mage_Core_Helper_Abstract
         }
         $resto = $soma % 11;
         return $cnpj[13] == ($resto < 2 ? 0 : 11 - $resto);
+    }
+
+    public function canShowInstallmentsConfig(){
+        return false;
     }
 }

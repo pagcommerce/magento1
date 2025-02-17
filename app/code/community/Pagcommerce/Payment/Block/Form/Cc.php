@@ -53,6 +53,8 @@ class Pagcommerce_Payment_Block_Form_Cc extends Mage_Payment_Block_Form_Cc
 
     public function getInterests()
     {
+
+
         /** @var Pagcommerce_Payment_Helper_Data $helper */
         $helper = Mage::helper('pagcommerce_payment');
         /** @var Mage_Sales_Model_Quote $quote */

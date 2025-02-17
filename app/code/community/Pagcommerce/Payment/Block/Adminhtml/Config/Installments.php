@@ -20,6 +20,12 @@ class Pagcommerce_Payment_Block_Adminhtml_Config_Installments extends Mage_Admin
 
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
+        if($this->_isCodeciaProductInstallmentEnabled()){
+            $url = Mage::helper('adminhtml')->getUrl('adminhtml/system_config/edit', array(
+                'section' => 'codecia_productinstallment',
+            ));
+            return '<div style="background-color: #dedede;padding: 10px;">Módulo de Parcelamento Codecia Instalado.<br> Configure o parcelamento em:<br> <strong><a href="'.$url.'">Codecia - Parcelamento</a></strong></div>';
+        }
         $this->setElement($element);
         
         $html = '<script type="text/javascript">';
@@ -109,21 +115,35 @@ class Pagcommerce_Payment_Block_Adminhtml_Config_Installments extends Mage_Admin
 
     protected function _getDisabled()
     {
+        if($this->_isCodeciaProductInstallmentEnabled()){
+            return '';
+        }
         return $this->getElement()->getDisabled() ? ' disabled' : '';
     }
 
     protected function _getValue($key)
     {
+        if($this->_isCodeciaProductInstallmentEnabled()){
+            return '';
+        }
         return $this->getElement()->getData('value/' . $key);
     }
 
     protected function _getSelected($key, $value)
     {
+        if($this->_isCodeciaProductInstallmentEnabled()){
+            return '';
+        }
         return $this->getElement()->getData('value/' . $key) == $value ? 'selected="selected"' : '';
     }
 
     protected function _getAddRowButtonHtml($container = false, $template = false, $title = 'Adicionar')
     {
+        if($this->_isCodeciaProductInstallmentEnabled()){
+            return '';
+        }
+
+
         $title = $this->__getHelper()->__($title);
         if (!isset($this->_addRowButtonHtml[$container])) {
             $this->_addRowButtonHtml[$container] = $this->getLayout()->createBlock('adminhtml/widget_button')
@@ -136,5 +156,15 @@ class Pagcommerce_Payment_Block_Adminhtml_Config_Installments extends Mage_Admin
                 ->toHtml();
         }
         return $this->_addRowButtonHtml[$container];
+    }
+
+    public function _isCodeciaProductInstallmentEnabled(){
+        /** @var Mage_Core_Helper_Data $coreHelper */
+        $coreHelper = Mage::helper('core');
+        if($coreHelper->isModuleEnabled('Codecia_Productinstallment')){
+            return true;
+        }
+
+        return false;
     }
 }
