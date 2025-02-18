@@ -84,6 +84,7 @@
     margin: 0;
     cursor: pointer;
     padding: 10px 10px 0;
+    font-weight: 500;
 }
 
 .pag-saved-card .cvv_content {
@@ -95,15 +96,18 @@
 }
 
 .pag-saved-card .expiration {
-    color: #999;
-    margin: 2px 0 0 83px;
+    margin: -3px 0 0 83px;
     display: block;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .pag-saved-card .expired {
     color: red;
     margin-left: 3px;
+}
+
+.pag-saved-card label {
+    font-weight: 400;
 }
 
 @media (min-width: 768px) {

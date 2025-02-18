@@ -57,7 +57,7 @@
         <reference name="head">
             <action method="addItem">
                 <type>skin_css</type>
-                <name>pagcommerce_payment/css/spaymentcss</name>
+                <name>pagcommerce_payment/css/payment.css</name>
             </action>
         </reference>
         <reference name="after_body_start">
@@ -74,6 +74,12 @@
     </customer_account>
 
     <pagcommerce_payment_cc_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>pagcommerce_payment/css/customer-cards.css</name>
+            </action>
+        </reference>
         <update handle="customer_account"/>
         <reference name="content">
             <block type="pagcommerce_payment/customerarea_cc"/>
