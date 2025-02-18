@@ -15,28 +15,51 @@
                 <name>pagcommerce_payment/css/styles.min.css</name>
             </action>
         </reference>
-
     </checkout_onepage_success>
 
     <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>pagcommerce_payment/css/payment.css</name>
+            </action>
+        </reference>
         <reference name="before_body_end">
             <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
         </reference>
     </checkout_onepage_index>
 
     <firecheckout_index_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>pagcommerce_payment/css/payment.css</name>
+            </action>
+        </reference>
         <reference name="before_body_end">
             <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
         </reference>
     </firecheckout_index_index>
 
     <onestepcheckout_index_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>pagcommerce_payment/css/payment.css</name>
+            </action>
+        </reference>
         <reference name="before_body_end">
             <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
         </reference>
     </onestepcheckout_index_index>
  
    <idecheckoutvm_index_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>pagcommerce_payment/css/spaymentcss</name>
+            </action>
+        </reference>
         <reference name="after_body_start">
             <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
         </reference>

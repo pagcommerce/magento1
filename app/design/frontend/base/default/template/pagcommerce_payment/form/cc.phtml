@@ -38,42 +38,46 @@
   $brands = $sourceBrands->toArray();
 
 ?>
-<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+<ul class="form-list pag-cc-form" id="payment_form_<?php echo $_code ?>" style="display:none;">
 
-    <li style="<?php echo !$savedCards ? 'display:none;' : ''; ?>">
-        <ul>
-            <?php foreach($savedCards as $savedCard): ?>
-                <li>
-                    <div>
-                        <input value="<?php echo $savedCard['id'] ?>" type="radio" name="payment[cc_cards]" class="radio"/>
-                        <label><img src="<?php $savedCard['card_brand'] ?>.png"/> <?php echo $brands[$savedCard['card_brand']]; ?> final <?php echo $savedCard['last4_digits'] ?></label>
-                        <div style="display: none;" class="cvv_content cvv_content_<?php echo $savedCard['id'] ?>">
-                            <label for="<?php echo $_code ?>_cc_cid" class="required"><em>*</em><?php echo $this->__('Código de segurança') ?></label>
-                            <div class="input-box">
-                                <div class="v-fix">
-                                    <input type="text" class="input-text cvv_saved cvv_saved_<?php echo $savedCard['id'] ?>" id="saved_card_id_<?php echo $savedCard['id'] ?>" name="payment[cc_cards_cvv]" value="" />
-                                </div>
-                            </div>
-                        </div>
+   <div class="pag-saved-cards">
+        <?php foreach($savedCards as $savedCard): ?>
+            <div class="pag-saved-card">
+                <label class="choice-field">
+                    <input value="<?php echo $savedCard['id'] ?>" type="radio" name="payment[cc_cards]" class="radio"/>
+                    <img src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/checkout/brands/'.$savedCard['card_brand'].'.svg'); ?>" alt="Card Brand"/>
+                    <span><?php echo $brands[$savedCard['card_brand']]; ?> final <?php echo $savedCard['last4_digits'] ?></span>
+                </label>
+                <span class="expiration">
+                    <?php echo $this->__('Expira') ?>
+                    <span><?php echo $savedCard['expiration_month'] ?></span>/
+                    <span><?php echo $savedCard['expiration_year'] ?></span>
+                    <span class="expired"><?php echo $this->__('Expirado') ?></span>
+                </span>
+                <div style="display: none;" class="cvv_content cvv_content_<?php echo $savedCard['id'] ?>">
+                    <label for="<?php echo $_code ?>_cc_cid" class="required"><em>*</em><?php echo $this->__('Código de segurança') ?></label>
+                    <div class="input-box">
+                        <input type="text" class="input-text cvv_saved cvv_saved_<?php echo $savedCard['id'] ?>" id="saved_card_id_<?php echo $savedCard['id'] ?>" name="payment[cc_cards_cvv]" value="" />
                     </div>
-                </li>
-            <?php endforeach; ?>
-            <li><button class="pag-add-card">Adicionar novo cartão de crédito</button></li>
-        </ul>
-    </li>
+                </div>
+            </div>
+        <?php endforeach; ?>
 
+        <button class="button pag-add-card">Adicionar novo cartão de crédito</button>
+   </div>
 
-    <li class="pag_card_form" style="<?php echo $styleFormCard; ?>">
+    <div class="pag_card_form field" style="<?php echo $styleFormCard; ?>">
         <input type="hidden" name="payment[cc_savedcard_id]"/>
         <label for="<?php echo $_code ?>_cc_number" class="required"><em>*</em><?php echo $this->__('Número do cartão de crédito') ?></label>
         <div class="input-box">
             <input type="text" id="<?php echo $_code ?>_cc_number" name="payment[cc_number]" title="<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Credit Card Number')) ?>" class="input-text pag-validate-bin" value="" />
         </div>
-    </li>
-    <li class="pag_card_form" style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_exp_div">
+    </div>
+
+    <div class="pag_card_form field" style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_exp_div">
         <label for="<?php echo $_code ?>_expiration" class="required"><em>*</em><?php echo $this->__('Data de expiração') ?></label>
-        <div class="input-box">
-            <div class="v-fix">
+        <div class="fields input-box">
+            <div class="field">
                 <select id="<?php echo $_code ?>_expiration" name="payment[cc_exp_month]" class="month validate-cc-exp required-entry">
                     <?php $_ccExpMonth = $this->getInfoData('cc_exp_month') ?>
                     <?php foreach ($this->getCcMonths() as $k=>$v): ?>
@@ -81,7 +85,7 @@
                     <?php endforeach ?>
                 </select>
             </div>
-            <div class="v-fix">
+            <div class="field">
                 <?php $_ccExpYear = $this->getInfoData('cc_exp_year') ?>
                 <select id="<?php echo $_code ?>_expiration_yr" name="payment[cc_exp_year]" class="year required-entry">
                     <?php foreach ($this->getCcYears() as $k=>$v): ?>
@@ -90,15 +94,16 @@
                 </select>
             </div>
         </div>
-    </li>
-    <li class="pag_card_form" style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_cvv_div">
+    </div>
+    
+    <div class="pag_card_form field" style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_cvv_div">
         <label for="<?php echo $_code ?>_cc_cid" class="required"><em>*</em><?php echo $this->__('Código de segurança') ?></label>
         <div class="input-box">
-            <div class="v-fix">
+            <div>
                 <input type="text" title="<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Card Verification Number')) ?>" class="input-text cvv required-entry" id="<?php echo $_code ?>_cc_cid" name="payment[cc_cid]" value="" />
             </div>
         </div>
-    </li>
+    </div>
 
 
     <!--Implementação de CPF-->
@@ -116,22 +121,20 @@
     }
     ?>
 
-    <li class="pag_card_form" style="<?php echo $styleFormCard; ?>">
+    <div class="pag_card_form field" style="<?php echo $styleFormCard; ?>">
         <label for="<?php echo $_code ?>_cc_name" class="required"><em>*</em><?php echo $this->__('Nome do titular do cartão') ?></label>
         <div class="input-box">
             <input type="text" id="<?php echo $_code ?>_cc_number" name="payment[cc_name]" title="<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Credit card holder name')) ?>" class="input-text required-entry" value="" />
         </div>
-    </li>
+    </div>
 
     <?php if (Mage::getStoreConfig('payment/pagcommerce_payment_cc/documento_obrigatorio')): ?>
-        <li class="pag_card_form"  style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_cpf">
+        <div class="pag_card_form field"  style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_cpf">
             <label for="<?php echo $_code ?>_cpf" class="required"><em>*</em><?php echo $this->__('CPF/CNPJ') ?></label>
             <div class="input-box">
-                <div class="v-fix">
-                    <input type="text" title="CPF" class="input-text validate-cpfcnpj required-entry" id="<?php echo $_code ?>_cpf" name="payment[cc_cpf]" value="<?php echo isset($customer_cpf) ? $customer_cpf : ''; ?>"  data-inputmask="'mask': ['999.999.999-99', '99.999.999/9999-99']" />
-                </div>
+                <input type="text" title="CPF" class="input-text validate-cpfcnpj required-entry" id="<?php echo $_code ?>_cpf" name="payment[cc_cpf]" value="<?php echo isset($customer_cpf) ? $customer_cpf : ''; ?>"  data-inputmask="'mask': ['999.999.999-99', '99.999.999/9999-99']" />
             </div>
-        </li>
+        </div>
     <?php endif; ?>
 
     <?php
@@ -139,10 +142,10 @@
     $oneParcel = !$parcels || sizeof($parcels) == 1;
     ?>
 
-    <li id="<?php echo $_code ?>_cc_type_interest_div">
+    <div class="field" id="<?php echo $_code ?>_cc_type_interest_div">
         <label for="<?php echo $_code ?>_cc_interest" class="required"><em>*</em><?php echo $this->__('Parcelamento') ?></label>
         <div class="input-box">
-            <div class="v-fix">
+            <div>
                 <select id="<?php echo $_code ?>_cc_interest" name="payment[cc_interest]" class="required-entry">
                     <option value=""><?php echo $this->__('--Please Select--')?></option>
                     <?php foreach ($this->getInterests() as $parcel): ?>
@@ -151,16 +154,14 @@
                 </select>
             </div>
         </div>
-    </li>
+    </div>
 
-    <li class="pag_card_form"  style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_save_card_div">
-        <label for="<?php echo $_code ?>_save_card" class="required"><em>*</em><?php echo $this->__('Salvar cartão de crédito para futuras compras?') ?></label>
-        <div class="input-box">
-            <div class="v-fix">
-                <input type="checkbox" class="input-checkbox" id="<?php echo $_code ?>_cc_save_card" name="payment[cc_save_card]" value="1" />
-            </div>
-        </div>
-    </li>
+    <div class="pag_card_form field"  style="<?php echo $styleFormCard; ?>" id="<?php echo $_code ?>_cc_type_save_card_div">
+        <label class="choice-field">
+            <input type="checkbox" class="input-checkbox" id="<?php echo $_code ?>_cc_save_card" name="payment[cc_save_card]" value="1" />
+            <span class="required label"><em>*</em><?php echo $this->__('Salvar cartão de crédito para futuras compras?') ?></span>
+        </label>
+    </div>
 </ul>
 
 <script>

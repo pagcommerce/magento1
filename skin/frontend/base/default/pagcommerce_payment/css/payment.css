@@ -1,0 +1,113 @@
+.pag-cc-form {
+    max-width: 350px;
+    width: 100%;
+    margin: 20px 0 0;
+}
+
+.pag-cc-form .field {
+    margin-bottom: 12px !important;
+}
+
+.pag-cc-form .fields {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.pag-cc-form .field .field {
+    margin: 0 !important;
+}
+
+.pag-cc-form .fields .field {
+    width: 100%;
+}
+
+.pag-cc-form input[type="text"],
+.pag-cc-form select {
+    width: 100%;
+    margin: 0;
+}
+
+.pag-cc-form select.month,
+.pag-cc-form select.year {
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.pag-cc-form .input-box::after {
+    content: none;
+}
+
+.pag-cc-form select {
+    height: 30px;
+}
+
+.pag-cc-form .choice-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.pag-cc-form .pag-add-card {
+    margin: 10px 0 0;
+    background: none;
+    border: 1px solid #3399cc;
+    color: #3399cc;
+}
+
+.pag-cc-form .pag-add-card:hover {
+    background: none;
+}
+
+.pag-saved-card {
+    color: #636363;
+    background-color: #f4f4f4;
+    display: inline-block;
+    width: auto;
+    max-width: none;
+    min-width: 250px;
+    float: none;
+    width: 100%;
+    padding: 0 0 10px;
+}
+
+.pag-saved-cards {
+    margin: 0 0 20px;
+}
+
+.pag-saved-card + .pag-saved-card {
+    border-top: 1px solid #dadada;
+}
+
+.pag-saved-card .choice-field {
+    margin: 0;
+    cursor: pointer;
+    padding: 10px 10px 0;
+}
+
+.pag-saved-card .cvv_content {
+    padding: 10px 0 0 83px;
+}
+
+.pag-saved-card .cvv_saved {
+    max-width: 65px !important;
+}
+
+.pag-saved-card .expiration {
+    color: #999;
+    margin: 2px 0 0 83px;
+    display: block;
+    font-size: 12px;
+}
+
+.pag-saved-card .expired {
+    color: red;
+    margin-left: 3px;
+}
+
+@media (min-width: 768px) {
+    .pag-cc-form .fields {
+        flex-wrap: nowrap;
+    }
+}
