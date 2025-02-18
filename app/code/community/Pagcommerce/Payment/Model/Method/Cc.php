@@ -21,6 +21,7 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
     protected $_canAuthorize = true;
     protected $_canCancelInvoice = true;
 
+    private $_last_pagcommerce_response = array();
 
     public function __construct()
     {
@@ -69,7 +70,13 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
 
         $api = $this->getApi();
         $response = $api->processPayment($payment->getOrder(), $parcelQty, $parcel);
+        $this->_last_pagcommerce_response = $response;
         if($response && isset($response['id'])){
+
+            /** @var Mage_Sales_Model_Order_Payment $payment */
+            $payment->setAdditionalInformation('transaction_id', $response['id']);
+            $payment->save();
+
             switch ($response['status']){
                 case 'denied':
                 case 'denied_risk':
@@ -89,6 +96,12 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
 
         return $this;
     }
+
+    public function getLastPagcommerceResponse(): array
+    {
+        return $this->_last_pagcommerce_response;
+    }
+
 
 
     /** @return $this */
@@ -302,22 +315,25 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
         if (!$order->canInvoice()) {
             return false;
         }
-
         $invoice = $order->prepareInvoice(array());
         if($invoice) {
+
+            $response = $this->getLastPagcommerceResponse();
+            if (isset($response['id'])){
+                $invoice->setTransactionId($response['id']);
+            }
+
             $invoice->register()->pay();
             $invoice->addComment($comment, $notify && $comment);
-            $data = $order->getPayment()->getAdditionalInformation();
-            if (isset($data['response_cielo']['Payment']['Tid'])){
-                $invoice->setTransactionId($data['response_cielo']['Payment']['Tid']);
-            }
-            $invoice->setEmailSent($notify);
             $invoice->getOrder()->setIsInProcess(true);
+            $invoice->setEmailSent($notify);
+
             Mage::getModel('core/resource_transaction')
                 ->addObject($invoice)
                 ->addObject($invoice->getOrder())
                 ->save();
             $invoice->sendEmail($notify, $comment);
+            $invoice->save();
 
             // Validação para produto virtual/baixável
             $items = $order->getAllItems();
@@ -352,11 +368,26 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
 
     public function refund(Varien_Object $payment, $amount)
     {
-        Mage::throwException(Mage::helper('payment')->__('Refund NOT CIELO.'));
-        if (!$this->canRefund()) {
-            Mage::throwException(Mage::helper('payment')->__('Refund action is not available.'));
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $payment->getOrder();
+        /** @var Pagcommerce_Payment_Model_Api_Cc $apiCc */
+        $apiCc = Mage::getModel('pagcommerce_payment/api_cc');
+        try{
+            $response = $apiCc->refundOrder($order);
+            if($response){
+                /** @var Mage_Admin_Model_Session $session */
+                $session = Mage::getModel('admin/session');
+                /** @var Mage_Admin_Model_User $user */
+                $user = $session->getUser();
+                $order->addStatusHistoryComment('Transação estornada pelo usuário '.$user->getName().' - '.$user->getEmail());
+            }
+            return $this;
+        }catch (Exception $e){
+            /** @var Mage_Admin_Model_Session $session */
+            $session = Mage::getSingleton('adminhtml/session');
+            $session->addError($e->getMessage());
+            throw new Exception($e->getMessage());
         }
-        return $this;
     }
 
 }

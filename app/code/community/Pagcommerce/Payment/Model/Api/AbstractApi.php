@@ -19,7 +19,7 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
 
     }
 
-    public function sendRequest($uri, $data, $method = 'POST'){
+    public function sendRequest($uri, $data = array(), $method = 'POST'){
         if($this->hasCredentials()){
             if($this->getEnvironment()){
                 $additionalHeaders = array();
@@ -279,5 +279,45 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
         );
         $data['notification_url'] = Mage::app()->getStore()->getUrl('pagcommerce_payment/standard/notification');
         return $data;
+    }
+
+
+    /** @return boolean */
+    public function refundOrder(Mage_Sales_Model_Order $order){
+
+        $payment = $order->getPayment();
+        $transactionID = $payment->getAdditionalInformation('transaction_id');
+
+        if($transactionID){
+            $transaction = $this->sendRequest('payment-transaction/'.$transactionID, array(), 'GET');
+            if($transaction && isset($transaction['id'])){
+                if($transactionID == $transaction['id']){
+                    if($transaction['status'] == 'approved'){
+                        if($transaction['transaction_type'] == 'cc' || $transaction['transaction_type'] == 'pix'){
+                            $response = $this->sendRequest('payment-refund', array('transaction_id' =>$transaction['id']));
+                            if($response && isset($response['refunded'])){
+                                if($response['refunded']){
+                                    return true;
+                                }
+                            }else{
+                                throw new Exception("Pagcommerce: Não é possível estornar essa transação. Por favor tente novamente. Se o problema persistir, utilize o modo offline e estorne a transação dentro do Painel Pagcommerce");
+                            }
+
+                        }else{
+                            throw new Exception("Pagcommerce: Não é possível estornar esse tipo de transação. Só é permitido estornar vendas por Pix e por Cartão de Crédito");
+                        }
+
+                    }else{
+                        throw new Exception('Pagcommerce: Não é possível estornar essa transação porque ela não foi paga');
+                    }
+                }else{
+                    throw new Exception("Pagcommerce: Transação inválida. Não é possível estornar");
+                }
+            }else{
+                throw new Exception("Pagcommerce: Transação não encontrada. Não é possível estornar");
+            }
+        }
+
+        return false;
     }
 }   

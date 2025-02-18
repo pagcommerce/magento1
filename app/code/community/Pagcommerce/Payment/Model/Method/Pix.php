@@ -9,7 +9,7 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
     protected $_isGateway = true;
     protected $_canCapture = false;
     protected $_canCapturePartial = false;
-    protected $_canRefund = false;
+    protected $_canRefund = true;
     protected $_canVoid = false;
     protected $_isInitializeNeeded = true;
 
@@ -19,7 +19,7 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
 
     protected $_canAuthorize = true;
     protected $_canCancelInvoice = false;
-
+    private $_last_pagcommerce_response = array();
 
     /**
      * Initialize
@@ -75,8 +75,12 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
         if($order && $order->getId()){
             $api = $this->_getApi();
             $pixResponse = $api->getPixResponse($order);
+            $this->_last_pagcommerce_response = $pixResponse;
             if($pixResponse && !isset($pixResponse['detail'])){
                 $info = $this->getInfoInstance();
+
+                /** @var Mage_Sales_Model_Order_Payment $payment */
+                $info->setAdditionalInformation('transaction_id', $pixResponse['id']);
                 $info->setAdditionalInformation('pix', $pixResponse['payment_data']);
                 $info->save();
             }else{
@@ -144,6 +148,33 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
 //    public function getOrderPlaceRedirectUrl(){
 //        return Mage::getUrl($this->getCode() . '/standard/success');
 //    }
+
+
+    public function refund(Varien_Object $payment, $amount)
+    {
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $payment->getOrder();
+        /** @var Pagcommerce_Payment_Model_Api_Cc $apiCc */
+        $apiCc = Mage::getModel('pagcommerce_payment/api_cc');
+        try{
+            $response = $apiCc->refundOrder($order);
+            if($response){
+                /** @var Mage_Admin_Model_Session $session */
+                $session = Mage::getModel('admin/session');
+                /** @var Mage_Admin_Model_User $user */
+                $user = $session->getUser();
+                $order->addStatusHistoryComment('Transação estornada pelo usuário '.$user->getName().' - '.$user->getEmail());
+            }
+            return $this;
+        }catch (Exception $e){
+            /** @var Mage_Admin_Model_Session $session */
+            $session = Mage::getSingleton('adminhtml/session');
+            $session->addError($e->getMessage());
+            throw new Exception($e->getMessage());
+        }
+
+    }
 
 
 }

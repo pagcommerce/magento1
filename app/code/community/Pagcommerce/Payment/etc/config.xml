@@ -103,6 +103,16 @@
                 </pagcommerce_payment>
             </updates>
         </layout>
+        <events>
+            <adminhtml_sales_order_creditmemo_register_before>
+                <observers>
+                    <pagcommerce_creditmemo>
+                        <class>pagcommerce_payment/observer</class>
+                        <method>prepareCreditMemo</method>
+                    </pagcommerce_creditmemo>
+                </observers>
+            </adminhtml_sales_order_creditmemo_register_before>
+        </events>
     </adminhtml>
     <default>
         <payment>

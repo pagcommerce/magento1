@@ -23,7 +23,7 @@ $brands = $sourceBrands->toArray();
                             <img class="brand" src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/checkout/brands/'.$creditCard['card_brand'].'.svg'); ?>"/>
                             <div class="title"><?php echo $brands[$creditCard['card_brand']]; ?> de final <?php echo $creditCard['first4_digits']; ?> </div>
                             <div class="expiration">Expira em: <?php echo $creditCard['expiration_month']; ?>/<?php echo $creditCard['expiration_year']; ?></div>
-                            <a href="#" class="remove-pag-card" data-id="<?php echo $creditCard['id']; ?>">Remover</a>
+                            <a href="#" class="remove-pag-card" data-id="<?php echo $creditCard['id']; ?>" data-label="<?php echo $brands[$creditCard['card_brand']]; ?> de final <?php echo $creditCard['first4_digits']; ?>">Remover</a>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -38,32 +38,36 @@ $brands = $sourceBrands->toArray();
             
         jQuery('.remove-pag-card').click(function() {
             var cardId = jQuery(this).attr('data-id');
-            
+            jQuery('.confirm-button').attr('data-id', cardId);
+
+            jQuery('.card-label').html(jQuery(this).attr('data-label'));
             modal.addClass('active');
-
-            jQuery('.confirm-button').click(function() {
-                jQuery('.pg_credit_card_' + cardId).fadeOut(400);
-                // AJAX PARA REMOVER CARTÃO
-
-                modal.removeClass('active');
-            });
-
-            jQuery('.cancel-button').click(function() {
-                modal.removeClass('active');
-            });
-
-            jQuery('.modal-close').click(function() {
-                modal.removeClass('active');
-            });
-
-            jQuery('.modal').click(function(e) {
-                if (e.target === this) {
-                    modal.removeClass('active');
-                }
-            });
-
             return false;
         });
+        
+       jQuery('.confirm-button').click(function() {
+           cardId = jQuery(this).attr('cardId');
+           jQuery('.pg_credit_card_' + cardId).fadeOut(400);
+           // AJAX PARA REMOVER CARTÃO
+           alert('REMOVE AJAX');
+           jQuery('#confirmation-modal').removeClass('active');
+       });
+
+       jQuery('.cancel-button').click(function() {
+           modal.removeClass('active');
+       });
+
+       jQuery('.modal-close').click(function() {
+           modal.removeClass('active');
+       });
+
+       jQuery('.modal').click(function(e) {
+           if (e.target === this) {
+               modal.removeClass('active');
+           }
+       });
+
+
    });
 </script>
 
@@ -79,11 +83,11 @@ $brands = $sourceBrands->toArray();
             </button>
         </div>
         <div class="modal-body">
-            <p>Essa ação é irreversível</p>
+            <p class="card-label"><img src="http://pagcommerce-magento1.intranet/skin/frontend/base/default/pagcommerce_payment/img/checkout/brands/mastercard.svg"/> Mastercard final 1234</p>
         </div>
         <div class="modal-footer">
             <button type="button" class="cancel-button button2">Cancelar</button>
-            <button type="button" class="confirm-button button">Confirmar</button>
+            <button type="button" class="confirm-button button" data-id="">Confirmar</button>
         </div>
     </div>
 </aside>
