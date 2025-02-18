@@ -63,6 +63,20 @@
         <reference name="after_body_start">
             <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
         </reference>
-    </idecheckoutvm_index_index> 
+    </idecheckoutvm_index_index>
 
+    <customer_account>
+        <!-- Mage_Review -->
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="pagcommerce_payment" order="1"><name>pagcommerce_payment_ccs</name><path>pagcommerce/cc/index</path><label>Cartões de Crédito</label></action>
+        </reference>
+
+    </customer_account>
+
+    <pagcommerce_payment_cc_index>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="pagcommerce_payment/customerarea_cc"/>
+        </reference>
+    </pagcommerce_payment_cc_index>
 </layout>

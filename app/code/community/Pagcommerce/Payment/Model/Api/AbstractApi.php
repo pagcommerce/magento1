@@ -81,13 +81,18 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
                 curl_close($ch);
 
                 if(!$error && $response){
+                    $response = json_decode($response, true);
                     if($httpCode == 404){
-                        $this->addErros('Nenhum registro encontrado');
+                        if(isset($response['detail'])){
+                            $this->addErros($response['detail']);
+                        }else{
+                            $this->addErros('Nenhum registro encontrado');
+                        }
+
                     }else{
                         if($httpCode == 403){
                             $this->addErros('Acesso não autorizado');
                         }else{
-                            $response = json_decode($response, true);
                             return $response;
                         }
                     }

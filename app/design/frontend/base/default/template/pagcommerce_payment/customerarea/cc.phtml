@@ -1,0 +1,43 @@
+<?php
+/** @var Pagcommerce_Payment_Block_Customerarea_Cc $this */
+
+$creditCards = $this->getCreditCardSaved();
+
+/** @var Pagcommerce_Payment_Model_Source_CreditCard_Brand $sourceBrands */
+$sourceBrands = Mage::getModel('Pagcommerce_Payment_Model_Source_CreditCard_Brand');
+$brands = $sourceBrands->toArray();
+
+?>
+<div class="my-account">
+    <div class="dashboard">
+        <div class="page-title">
+            <h1>Meus Cartões de Crédito</h1>
+        </div>
+        <div class="box-account box-recent">
+           <?php if(!$creditCards): ?>
+                    <div>Nenhum cartão de crédito cadastrado</div>
+           <?php else: ?>
+                <div class="pag_credit_cards">
+                    <?php foreach($creditCards as $creditCard): ?>
+                        <div class="pg_credit_card_<?php echo $creditCard['id'];  ?>">
+                            <img src="/<?php echo $creditCard['card_brand']; ?>.png"/>  <br>
+                            <?php echo $brands[$creditCard['card_brand']]; ?> de final <?php echo $creditCard['first4_digits']; ?> <br>
+                            Expira em: <?php echo $creditCard['expiration_month']; ?>/<?php echo $creditCard['expiration_year']; ?><br>
+                            <a href="#" class="remove-pag-card" data-id="<?php echo $creditCard['id']; ?>">Remover</a>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+           <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<script>
+   jQuery(document).ready(function(){
+       jQuery('.remove-pag-card').click(function(){
+           let cardId = jQuery(this).attr('data-id');
+           jQuery('.pg_credit_card_'+cardId).fadeOut(400);
+           return false;
+       });
+   });
+</script>
