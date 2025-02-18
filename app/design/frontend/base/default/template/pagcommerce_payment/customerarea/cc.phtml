@@ -44,13 +44,22 @@ $brands = $sourceBrands->toArray();
             modal.addClass('active');
             return false;
         });
-        
+
        jQuery('.confirm-button').click(function() {
-           cardId = jQuery(this).attr('cardId');
-           jQuery('.pg_credit_card_' + cardId).fadeOut(400);
+           var cardId = jQuery(this).attr('data-id');
+
            // AJAX PARA REMOVER CARTÃO
-           alert('REMOVE AJAX');
-           jQuery('#confirmation-modal').removeClass('active');
+           jQuery.get('/pagcommerce/ajax/removecc/id/'+cardId, function(data){
+
+           }, 'json').done(function(data) {
+               if(data.status){
+                   jQuery('.pg_credit_card_' + cardId).fadeOut(400);
+                   jQuery('#confirmation-modal').removeClass('active');
+               }else{
+                   alert(data.message);
+               }
+           });
+           return false;
        });
 
        jQuery('.cancel-button').click(function() {

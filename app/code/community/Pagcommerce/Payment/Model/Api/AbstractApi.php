@@ -20,6 +20,7 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
     }
 
     public function sendRequest($uri, $data = array(), $method = 'POST'){
+        $this->_erros = array();
         if($this->hasCredentials()){
             if($this->getEnvironment()){
                 $additionalHeaders = array();
@@ -38,20 +39,6 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
 
                 $ch = curl_init($this->getApiUrl().$uri);
                 curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-
-//                curl_setopt_array($ch, [
-//                    CURLOPT_RETURNTRANSFER => true,
-//                    CURLOPT_ENCODING => "",
-//                    CURLOPT_MAXREDIRS => 10,
-//                    CURLOPT_TIMEOUT => 30,
-//                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-//                    CURLOPT_CUSTOMREQUEST => $method,
-//                    CURLOPT_HTTPHEADER => [
-//                        "Accept: application/json",
-//                        "Content-Type: application/json"
-//                    ],
-//                ]);
-
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                     'Content-Type: application/json',
@@ -62,6 +49,11 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
                     case 'POST':
                         curl_setopt($ch, CURLOPT_POST, 1);
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                        break;
+                    case 'DELETE':
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                        curl_setopt($ch, CURLOPT_ENCODING, '');
+                        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
                         break;
                 }
 

@@ -8,6 +8,7 @@ class Pagcommerce_Payment_AjaxController extends Mage_Core_Controller_Front_Acti
             'status' => false,
             'message' => 'Acesso não autorizado'
         );
+
         $cardId = $this->getRequest()->getParam('id');
         if($cardId){
             /** @var Mage_Customer_Model_Session $session */
@@ -25,8 +26,14 @@ class Pagcommerce_Payment_AjaxController extends Mage_Core_Controller_Front_Acti
                         }
                     }
                     if($isValid){
-                        $response['status'] = true;
-                        $response['message'] = 'Cartão removido com sucesso';
+                        $responseDelete = $api->sendRequest('credit-card-token/'.$cardId, array(), 'DELETE');
+                        if($api->getErrors()){
+                            $response['message'] = $api->getErrors();
+                        }else{
+                            $response['status'] = true;
+                            $response['message'] = 'Cartão removido com sucesso';
+                        }
+
                     }else{
                         $response['message'] = 'Cartão de crédito não encontrado. Não é possível remover';
                     }
