@@ -39,7 +39,7 @@
 
 ?>
 <ul class="form-list pag-cc-form" id="payment_form_<?php echo $_code ?>" style="display:none;">
-   <div class="pag-saved-cards">
+   <div class="pag-saved-cards" style="<?php echo !$savedCards ? 'display:none;' : ''; ?>">
         <?php foreach($savedCards as $savedCard): ?>
             <div class="pag-saved-card">
                 <label class="choice-field">
