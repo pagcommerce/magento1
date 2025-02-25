@@ -43,15 +43,21 @@
         <?php foreach($savedCards as $savedCard): ?>
             <div class="pag-saved-card">
                 <label class="choice-field">
-                    <input value="<?php echo $savedCard['id'] ?>" type="radio" name="payment[cc_cards]" class="radio"/>
+                    <?php if(!$savedCard['expired']): ?>
+                        <input value="<?php echo $savedCard['id'] ?>" type="radio" name="payment[cc_cards]" class="radio" />
+                    <?php endif; ?>
                     <img src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/checkout/brands/'.$savedCard['card_brand'].'.svg'); ?>" alt="Card Brand"/>
                     <span><?php echo $brands[$savedCard['card_brand']]; ?> final <?php echo $savedCard['last4_digits'] ?></span>
                 </label>
                 <span class="expiration">
-                    <?php echo $this->__('Expira') ?>
-                    <span><?php echo $savedCard['expiration_month'] ?></span>/
-                    <span><?php echo $savedCard['expiration_year'] ?></span>
-                    <span class="expired"><?php echo $this->__('Expirado') ?></span>
+
+                    <?php if($savedCard['expired']):  ?>
+                        <span class="expired"><?php echo $this->__('Expirado') ?></span>
+                    <?php else: ?>
+                        <?php echo $this->__('Expira') ?>
+                        <span><?php echo $savedCard['expiration_month'] ?></span>/
+                        <span><?php echo $savedCard['expiration_year'] ?></span>
+                    <?php endif; ?>
                 </span>
                 <div style="display: none;" class="cvv_content cvv_content_<?php echo $savedCard['id'] ?>">
                     <label for="<?php echo $_code ?>_cc_cid" class="required"><em>*</em><?php echo $this->__('Código de segurança') ?></label>

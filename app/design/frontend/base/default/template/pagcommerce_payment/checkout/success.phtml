@@ -103,17 +103,23 @@ if($order && $order->getId()):
 
 
     <?php if ($data && $order->getPayment()->getMethod() == 'pagcommerce_payment_pix'):
+
+        $showQrCodeMobile = false;
+        $qrCodeClass = $showQrCodeMobile ? '' : 'pag-hide-mobile';
+
         if (isset($data['pix']['pix_qrcode']) && $data['pix']['pix_string']):
             ?>
             <div class="cctheme-payment-block pix-pendente" id="pix">
                     <div class="cctheme-payment-block-title">
                         <img src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/pix-icon.svg"') ?>" alt="Logo Pix" class="cctheme-image" width="20" height="20">
-                        <span class="cctheme-text">Realize o pagamento utilizando o QR Code abaixo</span>
+                        <span class="cctheme-text pag-hide-mobile">Realize o pagamento utilizando QR Code abaixo</span>
+                        <span class="cctheme-text pag-show-mobile">Realize o pagamento utilizando código abaixo</span>
                     </div>
                     <div class="content">
                         <div class="cctheme-payment-summary">
-                            <small class="cctheme-small summary-text">Escaneie o QR Code abaixo utilizando a câmera do celular</small>
-                            <div class="img-wrapper">
+                            <div class="<?php echo $showQrCodeMobile ? 'pag-hide-mobile' : 'pag-show-mobile'; ?>" style="margin-bottom: 5px; width: 100%"><input type="text" value="<?php echo $data['pix']['pix_string']; ?>" readonly="readonly" /></div>
+                            <small class="cctheme-small summary-text  <?php echo $qrCodeClass ?>">Escaneie o QR Code abaixo utilizando a câmera do celular</small>
+                            <div class="img-wrapper <?php echo $qrCodeClass ?>">
                                 <div class="img">
                                     <img src="<?php echo $data['pix']['pix_qrcode']; ?>" alt="Escaneie esse QR Code para realizar o pagamento" class="cctheme-image" width="150" height="150">
                                 </div>
@@ -244,3 +250,14 @@ if($order && $order->getId()):
 </div>
 <?php endif; ?>
 
+<style>
+    .pag-show-mobile{display: none;}
+    @media (max-width: 768px) {
+        .pag-hide-mobile {
+            display: none !important;
+        }
+        .pag-show-mobile {
+            display: block !important;
+        }
+    }
+</style>

@@ -22,7 +22,12 @@ $brands = $sourceBrands->toArray();
                         <div class="pg_credit_card pg_credit_card_<?php echo $creditCard['id'];  ?>">
                             <img class="brand" src="<?php echo $this->getSkinUrl('pagcommerce_payment/img/checkout/brands/'.$creditCard['card_brand'].'.svg'); ?>"/>
                             <div class="title"><?php echo $brands[$creditCard['card_brand']]; ?> de final <?php echo $creditCard['first4_digits']; ?> </div>
-                            <div class="expiration">Expira em: <?php echo $creditCard['expiration_month']; ?>/<?php echo $creditCard['expiration_year']; ?></div>
+                            <?php if(!$creditCard['expired']): ?>
+                                <div class="expiration">Expira em: <?php echo $creditCard['expiration_month']; ?>/<?php echo $creditCard['expiration_year']; ?></div>
+                            <?php else: ?>
+                                <div class="expiration"><span style="color: #FF0000;">Expirado</span></div>
+                            <?php endif; ?>
+
                             <a href="#" class="remove-pag-card" data-id="<?php echo $creditCard['id']; ?>" data-label="<?php echo $brands[$creditCard['card_brand']]; ?> de final <?php echo $creditCard['first4_digits']; ?>">Remover</a>
                         </div>
                     <?php endforeach; ?>
