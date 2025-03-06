@@ -5,30 +5,6 @@
 <?php $_code = $this->getMethodCode() ?>
 
 <?php
-  $savedCards = array(
-          array(
-                  "id" => 4,
-                  "card_brand" => "visa",
-                  "first4_digits" => "1234",
-                  "last4_digits" => "1111",
-                  "expiration_month" => "12",
-                  'expiration_year' =>  "2024",
-                  'holder_name' => 'JOAO SILVA',
-                  'customer_id' =>  18887
-          ),
-      array(
-          "id" => 5,
-          "card_brand" => "mastercard",
-          "first4_digits" => "1216",
-          "last4_digits" => "9871",
-          "expiration_month" => "11",
-          'expiration_year' =>  "2028",
-          'holder_name' => 'JOAO SILVA',
-          'customer_id' =>  18887
-      ),
-  );
-  $savedCards = array();
-
   $savedCards = $this->getCreditCardSaved();
 
   $styleFormCard = $savedCards ? 'display: none;' : '';
@@ -40,7 +16,9 @@
 ?>
 <ul class="form-list pag-cc-form" id="payment_form_<?php echo $_code ?>" style="display:none;">
    <div class="pag-saved-cards" style="<?php echo !$savedCards ? 'display:none;' : ''; ?>">
-        <?php foreach($savedCards as $savedCard): ?>
+
+       <?php if($savedCards): ?>
+            <?php foreach($savedCards as $savedCard): ?>
             <div class="pag-saved-card">
                 <label class="choice-field">
                     <?php if(!$savedCard['expired']): ?>
@@ -67,7 +45,7 @@
                 </div>
             </div>
         <?php endforeach; ?>
-
+       <?php endif; ?>
         <button class="button pag-add-card">Adicionar novo cartão de crédito</button>
    </div>
 
@@ -154,7 +132,7 @@
                 <select id="<?php echo $_code ?>_cc_interest" name="payment[cc_interest]" class="required-entry">
                     <option value=""><?php echo $this->__('--Please Select--')?></option>
                     <?php foreach ($this->getInterests() as $parcel): ?>
-                        <option value="<?php echo $parcel['parcel'] ?>"><?php echo $parcel['label'] ?></option>
+                        <option value="<?php echo $parcel['parcel'] ?>"><?php echo strip_tags($parcel['label']) ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
@@ -231,4 +209,28 @@
             });
         });
     <?php endif; ?>
+
+    var jsonInstallments = '';
+
+    document.observe('firecheckout:setResponseAfter', function(e) {
+        var installmentElement = jQuery('#pagcommerce_payment_cc_cc_interest');
+        installmentElement.attr('disabled','disabled');
+        jQuery.get('/pagcommerce/ajax/getinstallmentsquote', function(data){
+               currentJson = JSON.stringify(data);
+               if(currentJson !== jsonInstallments){
+                   if(data.status){
+                       installmentElement.empty();
+                       jQuery.each(data.installments, function(key, value){
+                           installmentElement.append('<option value="'+value.parcel+'">'+value.label+'</option>');
+                       });
+                       jsonInstallments = currentJson;
+                   }
+               }
+                installmentElement.removeAttr('disabled');
+
+        }, 'json');
+    });
+
+
+
 </script>

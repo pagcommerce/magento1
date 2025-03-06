@@ -45,4 +45,31 @@ class Pagcommerce_Payment_AjaxController extends Mage_Core_Controller_Front_Acti
         }
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
     }
+
+
+    public function getinstallmentsquoteAction(){
+
+        $response = array(
+            'status' => false,
+            'installments' => false
+        );
+
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote = Mage::getModel('checkout/session')->getQuote();
+
+        /** @var Pagcommerce_Payment_Helper_Data $helper */
+        $helper = Mage::helper('pagcommerce_payment');
+        $installments = $helper->getInterestsByTotal($quote->getGrandTotal());
+        if($installments){
+            foreach($installments as $key => $value){
+                $installments[$key]['label'] = strip_tags($value['label']);
+            }
+            $response['installments'] = $installments;
+            $response['status'] = true;
+        }
+
+        $this->getResponse()->clearHeaders()->setHeader('Content-type', 'application/json', true);
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
+
+    }
 }

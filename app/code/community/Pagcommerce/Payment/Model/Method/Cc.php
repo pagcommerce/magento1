@@ -190,7 +190,7 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
             }
         }else{
             if(!$data->getCcNumber()){
-                throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o número do cartão de crédito'));
+                throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o número do cartão de crédito ou escolher um cartão salvo'));
             }
             if(!$data->getCcName()){
                 throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o nome do titular do cartão'));
