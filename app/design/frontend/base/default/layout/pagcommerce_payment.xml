@@ -36,7 +36,7 @@
                 <name>pagcommerce_payment/css/payment.css</name>
             </action>
         </reference>
-        <reference name="before_body_end">
+        <reference name="content">
             <block type="Pagcommerce_Payment_Block_Checkout_Js" name="pagcommerce.payment.checkout.js" />
         </reference>
     </firecheckout_index_index>

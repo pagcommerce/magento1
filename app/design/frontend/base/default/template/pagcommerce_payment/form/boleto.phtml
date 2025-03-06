@@ -21,7 +21,7 @@ $instructions = $method->getConfigData('instructions');
     <?php endif; ?>
     <li>
         <label for="cpfcnpjboleto"> Informe seu CPF/CNPJ: </label>
-        <input type="text" id="cpfcnpjboleto" name="cpfcnpjboleto" value="<?php echo $taxvat; ?>" class="pagcommerce_documento required-entry input-text" maxlength="18">
+        <input type="text" id="cpfcnpjboleto" name="cpfcnpjboleto" value="<?php echo $taxvat; ?>" class="pagcommerce_documento required-entry input-text" maxlength="18" data-inputmask="'mask': ['999.999.999-99', '99.999.999/9999-99']">
     </li>
 </ul>
 
