@@ -5,6 +5,7 @@
             <action method="addJs"><file>pagcommerce_payment/inputmask.min.js</file></action>
         </reference>
     </default>
+
     <checkout_onepage_success>
         <reference name="checkout.success">
             <block type="Pagcommerce_Payment_Block_Checkout_Success" name="pagcommerce.payment.boleto.checkout.success" />
@@ -13,6 +14,10 @@
             <action method="addItem">
                 <type>skin_css</type>
                 <name>pagcommerce_payment/css/styles.min.css</name>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>pagcommerce_payment/css/share-link.css</name>
             </action>
         </reference>
     </checkout_onepage_success>
@@ -85,4 +90,13 @@
             <block type="pagcommerce_payment/customerarea_cc"/>
         </reference>
     </pagcommerce_payment_cc_index>
+
+    <sales_order_view>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>pagcommerce_payment/css/share-link.css</name>
+            </action>
+        </reference>
+    </sales_order_view>
 </layout>
