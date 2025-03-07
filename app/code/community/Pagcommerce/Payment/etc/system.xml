@@ -143,7 +143,7 @@
 
                         <days>
                             <label>Qtd Dias Vencimento</label>
-                            <comment>Quantidade de dias para o vencimento do boleto</comment>
+                            <comment>Quantidade de dias para o vencimento do Pix</comment>
                             <frontend_type>text</frontend_type>
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
@@ -199,6 +199,18 @@
                             <show_in_store>1</show_in_store>
                             <comment>Caso sim, exibirá o QRCode nas compras realizadas por celular. Caso não, exibirá somente o botão de copiar código do QRCode</comment>
                         </show_qrcode_mobile>
+
+
+                        <show_link translate="label">
+                            <label>Exibir link de compartilhamento?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Ao ativar, aparecerá um botão para compartilhar um link de pagamento por Whatsapp, Facebook ou telegram junto com o QRCode</comment>
+                        </show_link>
 
                     </fields>
                 </pagcommerce_payment_pix>

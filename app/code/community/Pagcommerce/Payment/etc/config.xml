@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Pagcommerce_Payment>
-            <version>1.6.0</version>
+            <version>1.7.0</version>
         </Pagcommerce_Payment>
     </modules>
     <global>
@@ -150,6 +150,7 @@
                 <cancel_order>1</cancel_order>
                 <show_qrcode_mobile>0</show_qrcode_mobile>
                 <instructions><![CDATA[<img src="/skin/frontend/base/default/pagcommerce_payment/img/pix-pagcommerce.svg" style="width: 130px; margin-top: 15px; margin-bottom: 15px;"/> <p>O QRCODE Pix será apresentado assim que finalizar esse Pedido.</p>]]></instructions>
+                <show_link>1</show_link>
             </pagcommerce_payment_pix>
 
             <pagcommerce_payment_cc>
