@@ -97,7 +97,7 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
         return $this;
     }
 
-    public function getLastPagcommerceResponse(): array
+    public function getLastPagcommerceResponse()
     {
         return $this->_last_pagcommerce_response;
     }
