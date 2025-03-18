@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Pagcommerce_Payment>
-            <version>1.7.0</version>
+            <version>1.8.0</version>
         </Pagcommerce_Payment>
     </modules>
     <global>
@@ -166,8 +166,8 @@
                 <label_nofee> sem juros</label_nofee>
                 <customer_attribute>taxvat</customer_attribute>
                 <brands>visa,mastercard,americanexpress,dinersclub,elo,hipercard,hiper</brands>
+                <fee_type>parcel</fee_type>
             </pagcommerce_payment_cc>
-
 
         </payment>
     </default>

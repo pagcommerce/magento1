@@ -64,74 +64,129 @@ class Pagcommerce_Payment_Helper_Data extends Mage_Core_Helper_Abstract
             return $installmentsCodecia;
         }
 
-
+        $installments = array();
         if($configInterest){
-            $installments = array();
-
             $arraConfig = $this->unserializeConfigData($configInterest);
             if($arraConfig){
-
-                $configUsed = false;
+                $parcelsAllowed = array();
+//                $configUsed = false;
                 for($i=0; $i<sizeof($arraConfig); $i++){
                     if($i ==0) continue;
                     if($orderTotal >=  $arraConfig[$i]['de'] && $orderTotal <= $arraConfig[$i]['ate']){
-                        $configUsed = $arraConfig[$i];
+//                        $configUsed = $arraConfig[$i];
+                        $parcelsAllowed[$arraConfig[$i]['parcela']] = $arraConfig[$i];
                     }
                 }
 
-                if($configUsed){
-                    //$helperCore->currency($orderTotal, true, false);
-                    for($i=1; $i<= $configUsed['parcela']; $i++){
-                        if($i == 1){
-                            $installments[$i] = array(
-                                'parcel' => $i,
-                                'price_byparcel' => $this->formatPrice($orderTotal),
-                                'label' => $i.$this->__('x de ').$helperCore->currency($orderTotal, true, false),
-                                'total_with_interest' => $this->formatPrice($orderTotal)
-                            );
-                        }else{
-                            $jurosByParcel = (($orderTotal * $configUsed['juros'])/100 ) * ($i-1);
-                            $totalWithJuros = $orderTotal + $jurosByParcel;
-                            $priceByParcel =  $totalWithJuros/$i;
+                if($parcelsAllowed){
 
-                            $label = $i.$this->__('x de ').$helperCore->currency($priceByParcel, true, false);
-                            if($jurosByParcel){
-                                $labelParcel = Mage::helper('pagcommerce_payment')->getConfigCc('label_install');
-                                if($labelParcel){
-                                    $labelParcel = $this->__($labelParcel);
-                                    $labelParcel = sprintf($labelParcel, $helperCore->currency($totalWithJuros, true, false));
-                                    $label.= $labelParcel;
-                                }
+                    $labelParcelWithFee = $this->__(Mage::helper('pagcommerce_payment')->getConfigCc('label_install'));
+                    $labelParcelNoFee =  $this->__(Mage::helper('pagcommerce_payment')->getConfigCc('label_nofee'));
+                    $feeType = Mage::helper('pagcommerce_payment')->getConfigCc('fee_type');
+
+                    foreach($parcelsAllowed as $key => $value){
+                        $juros = (float)$value['juros'];
+                        if($juros > 0){
+                            //tem juros
+
+                            if($feeType == Pagcommerce_Payment_Model_Source_Fee_Type::TYPE_PARCEL){
+                                $jurosByParcel = ($orderTotal * ($juros/100)) * $value['parcela'];
                             }else{
-                                $labelParcel = Mage::helper('pagcommerce_payment')->getConfigCc('label_nofee');
-                                if($labelParcel){
-                                    $labelParcel = $this->__($labelParcel);
-                                    $labelParcel = sprintf($labelParcel, $helperCore->currency($totalWithJuros, true, false));
-                                    $label.= $labelParcel;
-                                }
+                                $jurosByParcel = ($orderTotal * ($juros/100));
+
                             }
-                            $installments[$i] = array(
-                                'parcel' => $i,
+
+                            $totalWithJuros = $orderTotal + $jurosByParcel;
+                            $priceByParcel =  $totalWithJuros/$value['parcela'];
+
+
+                            $label = $key.$this->__('x de ').$helperCore->currency($priceByParcel, true, false);
+                            if($labelParcelWithFee){
+                                $labelParcel = sprintf($labelParcelWithFee, $helperCore->currency($totalWithJuros, true, false));
+                                $label.= $labelParcel;
+                            }
+
+                            $installments[$value['parcela']] = array(
+                                'parcel' => $value['parcela'],
                                 'price_byparcel' => $this->formatPrice($priceByParcel),
                                 'label' => $label,
                                 'total_with_interest' => $this->formatPrice($totalWithJuros)
                             );
+                        }else{
+                            //não tem juros
+                            $priceByParcel =  $orderTotal/$key;
+                            $label = $key.$this->__('x de ').$helperCore->currency($priceByParcel, true, false);
 
+                            if($labelParcelNoFee && $key > 1){
+                                $labelParcel = sprintf($labelParcelNoFee, $helperCore->currency($orderTotal, true, false));
+                                $label.= $labelParcel;
+                            }
 
+                            $installments[$value['parcela']] = array(
+                                'parcel' => $value['parcela'],
+                                'price_byparcel' => $this->formatPrice($priceByParcel),
+                                'label' => $label,
+                                'total_with_interest' => $this->formatPrice($orderTotal)
+                            );
                         }
                     }
-
-                }else{
-                    $i = 1;
-                    return array(
-                        $i => array(
-                            'parcel' => $i,
-                            'price_byparcel' => $orderTotal,
-                            'label' => $i.$this->__('x de ').$helperCore->currency($orderTotal, true, false),
-                            'total_with_interest' => $this->formatPrice($orderTotal)
-                        )
-                    );
                 }
+
+                return $installments;
+
+//                if($configUsed){
+//                    //$helperCore->currency($orderTotal, true, false);
+//                    for($i=1; $i<= $configUsed['parcela']; $i++){
+//                        if($i == 1){
+//                            $installments[$i] = array(
+//                                'parcel' => $i,
+//                                'price_byparcel' => $this->formatPrice($orderTotal),
+//                                'label' => $i.$this->__('x de ').$helperCore->currency($orderTotal, true, false),
+//                                'total_with_interest' => $this->formatPrice($orderTotal)
+//                            );
+//                        }else{
+//                            $jurosByParcel = (($orderTotal * $configUsed['juros'])/100 ) * ($i-1);
+//                            $totalWithJuros = $orderTotal + $jurosByParcel;
+//                            $priceByParcel =  $totalWithJuros/$i;
+//
+//                            $label = $i.$this->__('x de ').$helperCore->currency($priceByParcel, true, false);
+//                            if($jurosByParcel){
+//                                $labelParcel = Mage::helper('pagcommerce_payment')->getConfigCc('label_install');
+//                                if($labelParcel){
+//                                    $labelParcel = $this->__($labelParcel);
+//                                    $labelParcel = sprintf($labelParcel, $helperCore->currency($totalWithJuros, true, false));
+//                                    $label.= $labelParcel;
+//                                }
+//                            }else{
+//                                $labelParcel = Mage::helper('pagcommerce_payment')->getConfigCc('label_nofee');
+//                                if($labelParcel){
+//                                    $labelParcel = $this->__($labelParcel);
+//                                    $labelParcel = sprintf($labelParcel, $helperCore->currency($totalWithJuros, true, false));
+//                                    $label.= $labelParcel;
+//                                }
+//                            }
+//                            $installments[$i] = array(
+//                                'parcel' => $i,
+//                                'price_byparcel' => $this->formatPrice($priceByParcel),
+//                                'label' => $label,
+//                                'total_with_interest' => $this->formatPrice($totalWithJuros)
+//                            );
+//
+//
+//                        }
+//                    }
+//
+//                }else{
+//                    $i = 1;
+//                    return array(
+//                        $i => array(
+//                            'parcel' => $i,
+//                            'price_byparcel' => $orderTotal,
+//                            'label' => $i.$this->__('x de ').$helperCore->currency($orderTotal, true, false),
+//                            'total_with_interest' => $this->formatPrice($orderTotal)
+//                        )
+//                    );
+//                }
             }
             return $installments;
         }

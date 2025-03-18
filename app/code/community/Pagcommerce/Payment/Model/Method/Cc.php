@@ -170,7 +170,7 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
                     if($currentCard){
                         $cvv = trim($data->getData('cc_card_cvv_'.$currentCard['id']));
 
-                        $brandName =  $allCards[$currentCard['card_brand']];
+                        $brandName =  isset($allCards[$currentCard['card_brand']]) ?  $allCards[$currentCard['card_brand']] : '';
                         $last4 = $currentCard['last4_digits'];
                         $data->setCcCid($cvv);
                         $info->setAdditionalInformation('card_id', $currentCard['id']);
@@ -210,11 +210,11 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
                 throw new Mage_Payment_Model_Info_Exception($helper->__('É necessário informar o código de segurança do cartão'));
             }
 
-            $allowedBrands = $helper->getConfigCc('brands');
-            if(!$allowedBrands){
-                throw new Mage_Payment_Model_Info_Exception($helper->__('Nenhuma bandeira de cartão foi permitida para receber pagamentos'));
-            }
-            $allowedBrands = explode(',', $allowedBrands);
+//            $allowedBrands = $helper->getConfigCc('brands');
+//            if(!$allowedBrands){
+//                throw new Mage_Payment_Model_Info_Exception($helper->__('Nenhuma bandeira de cartão foi permitida para receber pagamentos'));
+//            }
+//            $allowedBrands = explode(',', $allowedBrands);
 
             /** @var Pagcommerce_Payment_Model_CreditCard_Issuer $issuer */
             $issuer = Mage::getModel('Pagcommerce_Payment_Model_CreditCard_Issuer');
@@ -222,9 +222,9 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
 
 
 
-            if(!in_array($brand, $allowedBrands)){
-                throw new Mage_Payment_Model_Info_Exception($helper->__('Bandeira '.$allCards[$brand].' não permitida para essa compra. Por favor utilize outro cartão'));
-            }
+//            if(!in_array($brand, $allowedBrands)){
+//                throw new Mage_Payment_Model_Info_Exception($helper->__('Bandeira '.$allCards[$brand].' não permitida para essa compra. Por favor utilize outro cartão'));
+//            }
 
             $ccNumber = $data->getCcNumber();
             $ccNumber = str_replace(array(' ', '-', '.'), '', $ccNumber);
@@ -247,7 +247,7 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
             $info->setCcOwner($data->getCcName());
 
 
-            $brandName = $allCards[$brand];
+            $brandName = isset($allCards[$brand]) ?  $allCards[$brand] : '';
             $last4 = substr($ccNumber, -4);
         }
 

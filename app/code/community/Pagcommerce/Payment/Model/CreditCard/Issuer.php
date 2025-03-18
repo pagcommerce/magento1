@@ -21,6 +21,6 @@ class Pagcommerce_Payment_Model_CreditCard_Issuer
                 return $issuer;
             }
         }
-        return false;
+        return '';
     }
 }

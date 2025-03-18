@@ -74,7 +74,7 @@ class Pagcommerce_Payment_Block_Adminhtml_Config_Installments extends Mage_Admin
                         $html.='<th>'.$this->__getHelper()->__('Valor pedido de').'</th>';
                         $html.='<th>'.$this->__getHelper()->__('Valor pedido até').'</th>';
                         $html.='<th>'.$this->__getHelper()->__('Quantidade de parcelas').'</th>';
-                        $html.='<th>'.$this->__getHelper()->__('Taxa de juro (%) por parcela').'</th>';
+                        $html.='<th>'.$this->__getHelper()->__('Taxa de juro (%)').'</th>';
                         $html.='<th></th>';
                     $html.='</tr>';
                 $html.='</tbody>';
