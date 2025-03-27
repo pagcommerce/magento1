@@ -28,6 +28,7 @@ class Pagcommerce_Payment_Model_Api_Cc extends Pagcommerce_Payment_Model_Api_Abs
         $data['customer_ip'] =  $customerIp;
         $data['card_taxvat'] =  $payment->getAdditionalInformation('document_number') ? $payment->getAdditionalInformation('document_number') : $payment->getOrder()->getCustomerTaxvat();
 
+        $data['card_number'] = preg_replace('/[^0-9]/', '', $data['card_number']);
 
         if((int)$data['installments'] > 1){
             /** @var Pagcommerce_Payment_Helper_Data $helper */

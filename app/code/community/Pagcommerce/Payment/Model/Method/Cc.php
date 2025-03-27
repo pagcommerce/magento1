@@ -79,8 +79,9 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
 
             switch ($response['status']){
                 case 'denied':
-                case 'denied_risk':
                     throw new Mage_Payment_Model_Info_Exception($helper->__('Pagamento não aprovado. Por favor tente novamente com outro cartão'));
+                case 'denied_risk':
+                    throw new Mage_Payment_Model_Info_Exception($helper->__('Pagamento não aprovado. Por favor tente novamente com outro cartão ou utilize outro dispositivo'));
                     break;
                 case 'approved':
                     $this->confirmPayment($payment->getOrder(), 'Pagamento confirmado');

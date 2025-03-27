@@ -93,10 +93,10 @@ abstract class Pagcommerce_Payment_Model_Api_AbstractApi{
                     $this->addErros($error);
                 }
             }else{
-                $this->addErros('É necessário setar o ambiente da API pelo método set environmente passando constantes ENV_* dessa classe');
+                $this->addErros('É necessário setar o ambiente da API');
             }
         }else{
-            $this->addErros('É necessário informar as credenciais de acesso a API pelos métodos setKey, setSecret, setPartnerId e setBusinessUnitId');
+            $this->addErros('É necessário informar as credenciais de acesso a API');
         }
         return false;
     }
