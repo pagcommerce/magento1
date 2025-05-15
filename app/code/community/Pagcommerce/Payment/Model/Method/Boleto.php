@@ -75,19 +75,35 @@ class Pagcommerce_Payment_Model_Method_Boleto extends Mage_Payment_Model_Method_
         /** @var Mage_Sales_Model_Order $order */
         if($order && $order->getId()){
             $api = $this->_getApi();
-            $boletoResponse = $api->getBoletoResponse($order);
-            if($boletoResponse && isset($boletoResponse['id'])){
-                $info = $this->getInfoInstance();
-                $info->setAdditionalInformation('boleto', $boletoResponse['payment_data']);
-                $info->save();
-            }else{
-                if(isset($boletoResponse['detail']) && $boletoResponse['detail']){
-                    $message = $boletoResponse['detail'];
-                }else{
-                    $message = 'Ocorreu um erro ao gerar o Boleto. '.$api->getErrors();
+            $countRequest = 0;
+
+            do{
+                try {
+                    $boletoResponse = $api->getBoletoResponse($order);
+                    if($boletoResponse && isset($boletoResponse['id'])){
+                        $countRequest = 100000;
+                        $info = $this->getInfoInstance();
+                        $info->setAdditionalInformation('boleto', $boletoResponse['payment_data']);
+                        $info->save();
+                    }else{
+                        if(isset($boletoResponse['detail']) && $boletoResponse['detail']){
+                            $message = $boletoResponse['detail'];
+                        }else{
+                            $message = 'Ocorreu um erro ao gerar o Boleto. '.$api->getErrors();
+                        }
+                        throw new Mage_Payment_Model_Info_Exception($message);
+                    }
+                }catch(Exception $e){
+                    Mage::log($e->getMessage(), null, 'pagcommerce_boleto_error.log');
+                    $countRequest++;
+                    if($countRequest >= 3){
+                        $countRequest = 100000;
+                        throw new Mage_Payment_Model_Info_Exception($e->getMessage());
+                    }else{
+                        sleep(1);
+                    }
                 }
-                throw new Mage_Payment_Model_Info_Exception($message);
-            }
+            }while($countRequest < 3);
         }
         return $this;
     }

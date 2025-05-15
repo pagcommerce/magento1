@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Pagcommerce_Payment>
-            <version>1.8.2</version>
+            <version>1.8.3</version>
         </Pagcommerce_Payment>
     </modules>
     <global>

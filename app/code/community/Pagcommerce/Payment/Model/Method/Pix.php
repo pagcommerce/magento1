@@ -74,23 +74,39 @@ class Pagcommerce_Payment_Model_Method_Pix extends Mage_Payment_Model_Method_Abs
         /** @var Mage_Sales_Model_Order $order */
         if($order && $order->getId()){
             $api = $this->_getApi();
-            $pixResponse = $api->getPixResponse($order);
-            $this->_last_pagcommerce_response = $pixResponse;
-            if($pixResponse && !isset($pixResponse['detail'])){
-                $info = $this->getInfoInstance();
 
-                /** @var Mage_Sales_Model_Order_Payment $payment */
-                $info->setAdditionalInformation('transaction_id', $pixResponse['id']);
-                $info->setAdditionalInformation('pix', $pixResponse['payment_data']);
-                $info->save();
-            }else{
-                if(isset($pixResponse['detail']) && $pixResponse['detail']){
-                    $message = $pixResponse['detail'];
-                }else{
-                    $message = 'Ocorreu um erro ao gerar o QR Code PIX. '.$api->getErrors();
+            $countRequest = 0;
+            do{
+                try{
+                    $pixResponse = $api->getPixResponse($order);
+                    $this->_last_pagcommerce_response = $pixResponse;
+                    if($pixResponse && !isset($pixResponse['detail'])){
+                        $countRequest = 10000;
+                        $info = $this->getInfoInstance();
+                        /** @var Mage_Sales_Model_Order_Payment $payment */
+                        $info->setAdditionalInformation('transaction_id', $pixResponse['id']);
+                        $info->setAdditionalInformation('pix', $pixResponse['payment_data']);
+                        $info->save();
+                    }else{
+                        if(isset($pixResponse['detail']) && $pixResponse['detail']){
+                            $countRequest = 10000;
+                            $message = $pixResponse['detail'];
+                        }else{
+                            $message = 'Ocorreu um erro ao gerar o QR Code PIX. '.$api->getErrors();
+                        }
+                        throw new Mage_Payment_Model_Info_Exception($message);
+                    }
+                }catch (Exception $e){
+                    Mage::log($e->getMessage(), null, 'pagcommerce_pix_error.log');
+                    $countRequest++;
+                    if($countRequest >= 3){
+                        $countRequest = 100000;
+                        throw new Mage_Payment_Model_Info_Exception($e->getMessage());
+                    }else{
+                        sleep(1);
+                    }
                 }
-                throw new Mage_Payment_Model_Info_Exception($message);
-            }
+            }while($countRequest < 3);
         }
         return $this;
     }

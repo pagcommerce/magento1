@@ -68,32 +68,50 @@ class Pagcommerce_Payment_Model_Method_Cc extends Mage_Payment_Model_Method_Abst
 
         $onlyAuthorize = $paymentAction == 'authorize' ? true : false;
 
-        $api = $this->getApi();
-        $response = $api->processPayment($payment->getOrder(), $parcelQty, $parcel);
-        $this->_last_pagcommerce_response = $response;
-        if($response && isset($response['id'])){
+        $countRequest = 0;
+        do{
+            $api = $this->getApi();
+            try{
+                $response = $api->processPayment($payment->getOrder(), $parcelQty, $parcel);
+                $this->_last_pagcommerce_response = $response;
+                if($response && isset($response['id'])){
+                    $countRequest = 100000;
+                    /** @var Mage_Sales_Model_Order_Payment $payment */
+                    $payment->setAdditionalInformation('transaction_id', $response['id']);
+                    $payment->save();
 
-            /** @var Mage_Sales_Model_Order_Payment $payment */
-            $payment->setAdditionalInformation('transaction_id', $response['id']);
-            $payment->save();
-
-            switch ($response['status']){
-                case 'denied':
-                    throw new Mage_Payment_Model_Info_Exception($helper->__('Pagamento não aprovado. Por favor tente novamente com outro cartão'));
-                case 'denied_risk':
-                    throw new Mage_Payment_Model_Info_Exception($helper->__('Pagamento não aprovado. Por favor tente novamente com outro cartão ou utilize outro dispositivo'));
-                    break;
-                case 'approved':
-                    $this->confirmPayment($payment->getOrder(), 'Pagamento confirmado');
-                    break;
-
+                    switch ($response['status']){
+                        case 'denied':
+                            throw new Mage_Payment_Model_Info_Exception($helper->__('Pagamento não aprovado. Por favor tente novamente com outro cartão'));
+                        case 'denied_risk':
+                            throw new Mage_Payment_Model_Info_Exception($helper->__('Pagamento não aprovado. Por favor tente novamente com outro cartão ou utilize outro dispositivo'));
+                            break;
+                        case 'approved':
+                            $this->confirmPayment($payment->getOrder(), 'Pagamento confirmado');
+                            break;
+                    }
+                }else{
+                    if($api->getErrors()) {
+                        throw new Mage_Payment_Model_Info_Exception($api->getErrors());
+                    }
+                    throw new Mage_Payment_Model_Info_Exception($helper->__('Ocorreu um erro ao processar seu pagamento. Por favor tente novamente'));
+                }
+            }catch (Exception $e){
+                if($e instanceof Mage_Payment_Model_Info_Exception){
+                    $countRequest = 100000;
+                    throw new Mage_Payment_Model_Info_Exception($e->getMessage());
+                }else{
+                    Mage::log($e->getMessage(), null, 'pagcommerce_cc_error.log');
+                    $countRequest++;
+                    if($countRequest >= 3){
+                        $countRequest = 100000;
+                        throw new Mage_Payment_Model_Info_Exception($e->getMessage());
+                    }else{
+                        sleep(1);
+                    }
+                }
             }
-        }else{
-            if($api->getErrors()) {
-                throw new Mage_Payment_Model_Info_Exception($api->getErrors());
-            }
-            throw new Mage_Payment_Model_Info_Exception($helper->__('Ocorreu um erro ao processar seu pagamento. Por favor tente novamente'));
-        }
+        }while($countRequest < 3);
 
         return $this;
     }
