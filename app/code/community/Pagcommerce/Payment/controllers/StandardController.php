@@ -41,7 +41,11 @@ class Pagcommerce_Payment_StandardController extends Mage_Core_Controller_Front_
     public function notificationAction(){
         if($this->getRequest()->isPost()){
             $data = $this->getRequest()->getPost();
+            if(!$data){
+                $data = json_decode(file_get_contents('php://input'), true);
+            }
             if(isset($data['id']) && isset($data['transaction_type']) && isset($data['reference_id'])){
+                /** @var Mage_Sales_Model_Order $order */
                 $order = Mage::getModel('sales/order')->loadByIncrementId($data['reference_id']);
                 if($order && $order->getId()){
                     if($data['status'] == 'approved'){
@@ -56,11 +60,26 @@ class Pagcommerce_Payment_StandardController extends Mage_Core_Controller_Front_
                                 }
                             }
                         }
+                    }else{
+                        if($data['status'] == 'denied_risk'){
+                            //antifraude negou...
+                            if($order->getState() == Mage_Sales_Model_Order::STATE_NEW){
+                                if($order->canCancel()){
+                                    $order->cancel();
+                                    $statusConfig = Mage::getStoreConfig('payment/pagcommerce_payment_cc/order_status_fraud_denied');
+                                    if($statusConfig){
+                                        $order->setStatus($statusConfig);
+                                        $order->save();
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
     private function confirmPayment(Mage_Sales_Model_Order $order, $comment = null, $notify = false) {
         $methodInstance = $order->getPayment()->getMethodInstance();
 

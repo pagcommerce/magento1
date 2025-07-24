@@ -450,6 +450,32 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </label_nofee>
+
+                        <order_status_fraud_analisys translate="label">
+                            <label>Status para pedidos em análise de fraude</label>
+                            <comment>Status precisam estar no state new</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status_new</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><active>1</active></depends>
+                        </order_status_fraud_analisys>
+
+                        <order_status_fraud_denied translate="label">
+                            <label>Status para pedidos negados pelo antifraude</label>
+                            <comment>Status precisam estar no state canceled</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>pagcommerce_payment/source_order_status_canceled</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><active>1</active></depends>
+                        </order_status_fraud_denied>
+
+
                     </fields>
                 </pagcommerce_payment_cc>
 
